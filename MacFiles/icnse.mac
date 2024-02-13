@@ -1,0 +1,35 @@
+# Macro file for ICNSE sheilding
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute icnse.mac
+#
+# Change the default number of workers (in multi-threading mode) 
+#/run/numberOfWorkers 4
+#
+# Initialize kernel
+/run/initialize
+
+#Setting all verbose to 0
+/control/verbose 0
+/run/verbose 0
+/event/verbose 0
+/tracking/verbose 0
+
+#Material 
+#Default material set to G4_Galactic
+/ICNSE/setMaterial HollowSpace_Logical G4_AIR
+/ICNSE/setMaterial Shell0_Logical G4_Pb
+/ICNSE/setMaterial Shell1_Logical G4_Pb
+/ICNSE/setMaterial World_Logical G4_AIR
+
+#Thickness can be changed as
+#/ICNSE/setInnerRadius Shell1_Logical 350
+#/ICNSE/setOuterRadius Shell1_Logical 550
+
+
+#Gun related Properties
+/gun/particle neutron
+/gun/energy 1 MeV
+/gun/position -70 0 0 cm
+/gun/direction 1 0 0
+/run/beamOn 1000

@@ -1,0 +1,19 @@
+/run/initialize
+#/tracking/verbose 1
+#/ICNSE/setMaterial Shell1_Logical ICNSE_PS
+#/ICNSE/setOuterRadius OuterHDPEShell_Logical 660
+#/ICNSE/setInnerRadius OuterPSShell_Logical 660
+#/ICNSE/setOuterRadius OuterPSShell_Logical 700
+
+
+/ICNSE/setMaterial OuterHDPEShell_Logical ICNSE_BP
+/ICNSE/setMaterial InnerBPShell_Logical ICNSE_HDPE
+/ICNSE/setMaterial InnerPbShell_Logical ICNSE_BP
+/ICNSE/setMaterial InnerHDPEShell_Logical G4_Pb
+
+/gun/particle GUN 
+/gun/energy ENER keV
+/gun/position -90 0 0 cm
+/gun/direction 1 0 0
+/run/beamOn NPARTICLES 
+
