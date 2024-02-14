@@ -272,6 +272,8 @@ G4Material *GeometryProperties::GetMaterial() const { return fMaterial; }
 
 G4LogicalVolume *GeometryProperties::GetLogicalVolume() const { return fLogicalVolume; }
 
+G4AssemblyVolume *GeometryProperties::GetAssemblyVolume() const{return fAssembly;}
+
 // Cylindrical Shell
 CylindricalShell::CylindricalShell() {}
 

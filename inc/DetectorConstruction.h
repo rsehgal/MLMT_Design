@@ -14,6 +14,7 @@ class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4SDManager;
 class G4Material;
+class G4AssemblyVolume;
 
 class DetectorConstruction : public G4VUserDetectorConstruction {
   // G4Material *fScintMaterial;

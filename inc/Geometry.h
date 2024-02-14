@@ -13,6 +13,7 @@ class G4Material;
 class G4VSolid;
 class G4Tubs;
 class G4SubtractionSolid;
+class G4AssemblyVolume;
 
 #include <G4CSGSolid.hh>
 #include <G4String.hh>
@@ -23,6 +24,7 @@ public:
   G4VSolid *fSolid;
   G4Material *fMaterial;
   G4LogicalVolume *fLogicalVolume;
+  G4AssemblyVolume *fAssembly;
   // DetectorMessenger *fGeometryMessenger;
   G4GenericMessenger *fGeometryMessenger = nullptr;
 
@@ -60,6 +62,7 @@ public:
   // void SetInnerRadius(double innerRad);
   G4Material *GetMaterial() const;
   G4LogicalVolume *GetLogicalVolume() const;
+  G4AssemblyVolume *GetAssemblyVolume() const;
   void DefineCommands();
 };
 
@@ -109,14 +112,13 @@ public:
 /*
 ** A class to represent Bare Scintillator
 */
-class Scintillator {
+class Scintillator : public GeometryProperties{
 private:
   unsigned int fCounter;
 
 public:
   Scintillator();
   Scintillator(G4String name, double halfx, double halfy, double halfz, G4String material = G4String("G4_Galactic"));
-  Scintillator(G4String name, double halfx, double halfy, double halfz, G4Material *material);
 
   ~Scintillator();
 };
@@ -124,7 +126,7 @@ public:
 /*
 ** A class to represent Bare PMT
 */
-class PMT {
+class PMT : public GeometryProperties{
 private:
   unsigned int fCounter;
 
@@ -132,8 +134,6 @@ public:
   PMT();
   PMT(G4String name, double rmin, double rmax, double dz, double sphi = 0., double dphi = 2 * M_PI,
       G4String material = G4String("G4_Galactic"));
-  PMT(G4String name, double rmin, double rmax, double dz, double sphi = 0., double dphi = 2 * M_PI,
-      G4Material *material=nullptr);
 
   ~PMT();
 };
@@ -141,7 +141,7 @@ public:
 /*
 ** Scintillator couple with PMT
 */
-class ScintillatorDetector {
+class ScintillatorDetector : public GeometryProperties{
 private:
   double fScintillatorEnvelopeHalfX;
   double fScintillatorEnvelopeHalfY;
@@ -158,9 +158,9 @@ private:
 public:
   ScintillatorDetector();
   ScintillatorDetector(G4String name, double scintHalfX, double scintHalfY, double scintHalfZ, double pmtRMin,
-                       double pmtRMax, double pmtDz, G4String material = G4String("G4_Galactic"));
-  ScintillatorDetector(G4String name, double scintHalfX, double scintHalfY, double scintHalfZ, double pmtRMin,
-                       double pmtRMax, double pmtDz, G4Material *material);
+                       double pmtRMax, double pmtDz, G4String scintillatorMaterial=G4String("G4_Galactic"), G4String pmtMaterial = G4String("G4_Galactic"));
+  /*ScintillatorDetector(G4String name, double scintHalfX, double scintHalfY, double scintHalfZ, double pmtRMin,
+                       double pmtRMax, double pmtDz, G4Material *material);*/
 
   ~ScintillatorDetector();
   unsigned int GetHalfX() const;
@@ -175,7 +175,7 @@ public:
 ** Formed by subtracting sequence of scintillator size box from a
 ** from a solid box
 */
-class SupportPlane {
+class SupportPlane : public GeometryProperties{
 private:
   unsigned int fNumOfScintillators;
   double fSeparation;
@@ -186,12 +186,15 @@ private:
   double fSupportingPlaneHalfZ;
 
 public:
+  SupportPlane();
+  ~SupportPlane();
+  SupportPlane(unsigned int numOfScintillators,double separation, ScintillatorDetector *envelope);
 };
 
 /*
 ** A full assembly of support structure with scintillator detector
 ** inserted in the slots
 */
-class ScintillatorPlane {
+class ScintillatorPlane : public GeometryProperties{
 };
 #endif
