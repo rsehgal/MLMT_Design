@@ -38,7 +38,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
   // If particle gun is NOT set from the macro then it will use the default
   // Cs137 as particle gun
-
+  #if(0)
   if (particle == G4Geantino::Geantino()) {
     std::cout << "@@@@ Changed particle from geantino to required ion @@@@" << std::endl;
 
@@ -51,5 +51,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
     fParticleGun->SetParticleDefinition(ion);
     fParticleGun->SetParticleCharge(charge);
   }
+  #endif
   fParticleGun->GeneratePrimaryVertex(event);
 }

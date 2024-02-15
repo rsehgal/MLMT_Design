@@ -8,6 +8,8 @@
 #include <G4LogicalVolume.hh>
 #include "G4VPhysicalVolume.hh"
 #include "G4PVPlacement.hh"
+#include "SD.h"
+#include "G4SDManager.hh"
 
 ScintillatorDetector::ScintillatorDetector() {}
 
@@ -57,4 +59,9 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                     false,                                               // no boolean operation
                     1,                                                   // copy number
                     checkOverlaps);
+
+  G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
+  SD *scintSD = new SD("Scintillator");
+  fSDMan->AddNewDetector(scintSD);
+  logicalScintillator->SetSensitiveDetector(scintSD);
 }

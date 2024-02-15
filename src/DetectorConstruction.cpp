@@ -66,12 +66,30 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   ScintillatorDetector *scintDet = (new ScintillatorDetector("CompleteScintillatorDetector", 1. * cm, 1. * cm, 50. * cm,
                                                              0. * cm, 0.5 * cm, 1. * cm, "ICNSE_PS", "G4_Galactic"));
 
+#ifdef USE_ASSEMBLIES
   G4AssemblyVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetAssemblyVolume();
   G4ThreeVector trans(0., 0., 0.);
   supportPlane->MakeImprint(logicalWorld, trans, 0);
-  /*
-  SD *bpSD = new SD("BoratedPolyEthylene");
-  fSDMan->AddNewDetector(bpSD);
+
+  G4ThreeVector trans2(0.,-50.*cm,0.);
+  supportPlane->MakeImprint(logicalWorld, trans2, 0);
+#else
+  G4LogicalVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetLogicalVolume();
+new G4PVPlacement(0,                                                     // no rotation
+                      G4ThreeVector(), // at (0,0,0)
+                      supportPlane,                                             // its logical volume
+                      "PhysicalPlane",                                   // its name
+                      logicalWorld,                                  // its mother  volume
+                      false,                                                 // no boolean operation
+                      0,                                                     // copy number
+                      checkOverlaps);
+
+#endif
+
+
+  
+ /* SD *scintSD = new SD("Scintillator");
+  fSDMan->AddNewDetector(scintSD);
   logicalInnerBPShell->SetSensitiveDetector(bpSD);
   */
 
