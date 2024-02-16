@@ -44,7 +44,7 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                     0,                      // copy number
                     checkOverlaps);
   new G4PVPlacement(0,                                           // no rotation
-                    G4ThreeVector(0., 0., fScintHalfZ + fPmtDz), // at (0,0,0)
+                    G4ThreeVector(0., 0., fScintHalfZ + fPmtDz), //
                     logicalPMT,                                  // its logical volume
                     "PhysicalPMT",                               // its name
                     fLogicalVolume,                              // its mother  volume
@@ -52,7 +52,7 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                     0,                                           // copy number
                     checkOverlaps);
   new G4PVPlacement(0,                                                   // no rotation
-                    G4ThreeVector(0., 0., -1. * (fScintHalfZ + fPmtDz)), // at (0,0,0)
+                    G4ThreeVector(0., 0., -1. * (fScintHalfZ + fPmtDz)), //
                     logicalPMT,                                          // its logical volume
                     "PhysicalPMT",                                       // its name
                     fLogicalVolume,                                      // its mother  volume
@@ -61,7 +61,7 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                     checkOverlaps);
 
   G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
-  SD *scintSD = new SD("Scintillator");
+  SD *scintSD         = new SD("Scintillator");
   fSDMan->AddNewDetector(scintSD);
   logicalScintillator->SetSensitiveDetector(scintSD);
 }

@@ -26,19 +26,21 @@ std::vector<G4LogicalVolume *> vecOfLogicalVolumes;
 
 GeometryProperties::GeometryProperties() {}
 
-GeometryProperties::GeometryProperties(G4Material *material, G4VSolid *solid) {
+GeometryProperties::GeometryProperties(G4Material *material, G4VSolid *solid)
+{
   fLogicalVolume = new G4LogicalVolume(solid, material, solid->GetName() + "_Logical");
 }
-GeometryProperties::GeometryProperties(G4String material, G4VSolid *solid) {
+GeometryProperties::GeometryProperties(G4String material, G4VSolid *solid)
+{
 
-  G4NistManager *nist = G4NistManager::Instance();
+  G4NistManager *nist        = G4NistManager::Instance();
   G4Material *solid_material = nist->FindOrBuildMaterial(material);
-  fLogicalVolume = new G4LogicalVolume(solid, solid_material, solid->GetName() + "_Logical");
-  // fGeometryMessenger = new DetectorMessenger(this);
+  fLogicalVolume             = new G4LogicalVolume(solid, solid_material, solid->GetName() + "_Logical");
   DefineCommands();
 }
 
-void GeometryProperties::DefineCommands() {
+void GeometryProperties::DefineCommands()
+{
 
   fGeometryMessenger = new G4GenericMessenger(this, "/ICNSE/", "Material Name");
   fGeometryMessenger->DeclareMethod("setMaterial", &GeometryProperties::SetMaterial,
@@ -61,14 +63,15 @@ void GeometryProperties::DefineCommands() {
                                     "Set the Thickness of the BoxShell");
 }
 
-void GeometryProperties::SetBoxShellXDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxShellXDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       // BoxShell *boxShell = dynamic_cast<BoxShell *>(vecOfLogicalVolumes[i]->GetSolid());
       // //->SetInnerRadius(innerRad); boxShell->SetXHalfLength(half);
       G4SubtractionSolid *boxShell = dynamic_cast<G4SubtractionSolid *>(vecOfLogicalVolumes[i]->GetSolid());
-      G4VSolid *boxOuter = boxShell->GetConstituentSolid(0);
-      G4Box *box = dynamic_cast<G4Box *>(boxOuter);
+      G4VSolid *boxOuter           = boxShell->GetConstituentSolid(0);
+      G4Box *box                   = dynamic_cast<G4Box *>(boxOuter);
       box->SetXHalfLength(half);
       // std::cout << "--------------------------------------" << std::endl;
     }
@@ -76,14 +79,13 @@ void GeometryProperties::SetBoxShellXDim(G4String logicalVolumeName, double half
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxShellYDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxShellYDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
-      // BoxShell *boxShell = dynamic_cast<BoxShell *>(vecOfLogicalVolumes[i]->GetSolid());
-      // //->SetInnerRadius(innerRad); boxShell->SetXHalfLength(half);
       G4SubtractionSolid *boxShell = dynamic_cast<G4SubtractionSolid *>(vecOfLogicalVolumes[i]->GetSolid());
-      G4VSolid *boxOuter = boxShell->GetConstituentSolid(0);
-      G4Box *box = dynamic_cast<G4Box *>(boxOuter);
+      G4VSolid *boxOuter           = boxShell->GetConstituentSolid(0);
+      G4Box *box                   = dynamic_cast<G4Box *>(boxOuter);
       box->SetYHalfLength(half);
       // std::cout << "--------------------------------------" << std::endl;
     }
@@ -91,14 +93,13 @@ void GeometryProperties::SetBoxShellYDim(G4String logicalVolumeName, double half
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxShellZDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxShellZDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
-      // BoxShell *boxShell = dynamic_cast<BoxShell *>(vecOfLogicalVolumes[i]->GetSolid());
-      // //->SetInnerRadius(innerRad); boxShell->SetXHalfLength(half);
       G4SubtractionSolid *boxShell = dynamic_cast<G4SubtractionSolid *>(vecOfLogicalVolumes[i]->GetSolid());
-      G4VSolid *boxOuter = boxShell->GetConstituentSolid(0);
-      G4Box *box = dynamic_cast<G4Box *>(boxOuter);
+      G4VSolid *boxOuter           = boxShell->GetConstituentSolid(0);
+      G4Box *box                   = dynamic_cast<G4Box *>(boxOuter);
       box->SetZHalfLength(half);
       // std::cout << "--------------------------------------" << std::endl;
     }
@@ -106,14 +107,15 @@ void GeometryProperties::SetBoxShellZDim(G4String logicalVolumeName, double half
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxShellThickness(G4String logicalVolumeName, double thickness) {
+void GeometryProperties::SetBoxShellThickness(G4String logicalVolumeName, double thickness)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4SubtractionSolid *boxShell = static_cast<G4SubtractionSolid *>(vecOfLogicalVolumes[i]->GetSolid());
-      G4VSolid *boxOuter = boxShell->GetConstituentSolid(0);
-      G4VSolid *boxInner = boxShell->GetConstituentSolid(1);
-      G4Box *boxOuterSolid = static_cast<G4Box *>(boxOuter);
-      G4Box *boxInnerSolid = static_cast<G4Box *>(boxInner);
+      G4VSolid *boxOuter           = boxShell->GetConstituentSolid(0);
+      G4VSolid *boxInner           = boxShell->GetConstituentSolid(1);
+      G4Box *boxOuterSolid         = static_cast<G4Box *>(boxOuter);
+      G4Box *boxInnerSolid         = static_cast<G4Box *>(boxInner);
 
       double newInnerHalfX = boxOuterSolid->GetXHalfLength() - thickness;
       double newInnerHalfY = boxOuterSolid->GetYHalfLength() - thickness;
@@ -135,12 +137,13 @@ void GeometryProperties::SetBoxShellThickness(G4String logicalVolumeName, double
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
+void GeometryProperties::SetProperties(G4String material, G4VSolid *solid)
+{
 
   // G4NistManager *nist = G4NistManager::Instance();
-  Materials *nist = Materials::Instance();
+  Materials *nist                                = Materials::Instance();
   std::map<G4String, G4VisAttributes *> colorMap = nist->GetColorMap();
-  G4Material *solid_material = nist->FindOrBuildMaterial(material);
+  G4Material *solid_material                     = nist->FindOrBuildMaterial(material);
   fLogicalVolume = new G4LogicalVolume(solid, solid_material, solid->GetName() + "_Logical");
   if (colorMap.count(material)) {
     colorMap[material]->SetForceSolid(true);
@@ -150,7 +153,8 @@ void GeometryProperties::SetProperties(G4String material, G4VSolid *solid) {
   DefineCommands();
 }
 
-void GeometryProperties::SetProperties(G4Material *material, G4VSolid *solid) {
+void GeometryProperties::SetProperties(G4Material *material, G4VSolid *solid)
+{
 
   fLogicalVolume = new G4LogicalVolume(solid, material, solid->GetName() + "_Logical");
   vecOfLogicalVolumes.push_back(fLogicalVolume);
@@ -159,12 +163,12 @@ void GeometryProperties::SetProperties(G4Material *material, G4VSolid *solid) {
 
 GeometryProperties::~GeometryProperties() {}
 
-void GeometryProperties::SetInnerRadius(G4String logicalVolumeName, double innerRad) {
+void GeometryProperties::SetInnerRadius(G4String logicalVolumeName, double innerRad)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
 
     std::cout << "++++++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
-    // if (fLogicalVolume->GetName() == logicalVolumeName)
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Tubs *tubs = dynamic_cast<G4Tubs *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
       tubs->SetInnerRadius(innerRad);
@@ -175,12 +179,12 @@ void GeometryProperties::SetInnerRadius(G4String logicalVolumeName, double inner
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outerRad) {
+void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outerRad)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
 
     std::cout << "++++++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
-    // if (fLogicalVolume->GetName() == logicalVolumeName)
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Tubs *tubs = dynamic_cast<G4Tubs *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
       tubs->SetOuterRadius(outerRad);
@@ -190,7 +194,8 @@ void GeometryProperties::SetOuterRadius(G4String logicalVolumeName, double outer
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxXDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxXDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
@@ -201,7 +206,8 @@ void GeometryProperties::SetBoxXDim(G4String logicalVolumeName, double half) {
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxYDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxYDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
@@ -212,7 +218,8 @@ void GeometryProperties::SetBoxYDim(G4String logicalVolumeName, double half) {
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxZDim(G4String logicalVolumeName, double half) {
+void GeometryProperties::SetBoxZDim(G4String logicalVolumeName, double half)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
@@ -223,7 +230,8 @@ void GeometryProperties::SetBoxZDim(G4String logicalVolumeName, double half) {
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-void GeometryProperties::SetBoxAllDim(G4String logicalVolumeName, double halfx, double halfy, double halfz) {
+void GeometryProperties::SetBoxAllDim(G4String logicalVolumeName, double halfx, double halfy, double halfz)
+{
   for (unsigned int i = 0; i < vecOfLogicalVolumes.size(); i++) {
     if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       G4Box *box = dynamic_cast<G4Box *>(vecOfLogicalVolumes[i]->GetSolid()); //->SetInnerRadius(innerRad);
@@ -235,10 +243,11 @@ void GeometryProperties::SetBoxAllDim(G4String logicalVolumeName, double halfx, 
   }
 }
 
-void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String material) {
+void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String material)
+{
   // G4NistManager *nist = G4NistManager::Instance();
-  Materials *nist = Materials::Instance();
-  G4Material *solid_material = nist->FindOrBuildMaterial(material);
+  Materials *nist                                = Materials::Instance();
+  G4Material *solid_material                     = nist->FindOrBuildMaterial(material);
   std::map<G4String, G4VisAttributes *> colorMap = nist->GetColorMap();
   if (solid_material)
     fMaterial = solid_material;
@@ -249,8 +258,7 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
 
     std::cout << "--------------------------------------" << std::endl;
     std::cout << vecOfLogicalVolumes[i]->GetName() << std::endl;
-    // if (fLogicalVolume->GetName() == logicalVolumeName)
-    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName){
+    if (vecOfLogicalVolumes[i]->GetName() == logicalVolumeName) {
       vecOfLogicalVolumes[i]->SetMaterial(fMaterial);
       vecOfLogicalVolumes[i]->SetVisAttributes(colorMap[material]);
     }
@@ -258,8 +266,7 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
 #ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
     // std::cout << "Adding Reflective surfaces" << std::endl;
     G4SurfaceProperty *opticalMirror = Materials::Instance()->GetMirror("opticalMirror");
-    // G4LogicalSkinSurface *skin1 =
-    const G4String skinName = logicalVolumeName + "_OpticalSkin";
+    const G4String skinName          = logicalVolumeName + "_OpticalSkin";
     new G4LogicalSkinSurface(skinName, vecOfLogicalVolumes[i], opticalMirror);
 #endif
     std::cout << "After material change : " << vecOfLogicalVolumes[i]->GetMaterial()->GetName() << std::endl;
@@ -268,11 +275,20 @@ void GeometryProperties::SetMaterial(G4String logicalVolumeName, G4String materi
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
-G4Material *GeometryProperties::GetMaterial() const { return fMaterial; }
+G4Material *GeometryProperties::GetMaterial() const
+{
+  return fMaterial;
+}
 
-G4LogicalVolume *GeometryProperties::GetLogicalVolume() const { return fLogicalVolume; }
+G4LogicalVolume *GeometryProperties::GetLogicalVolume() const
+{
+  return fLogicalVolume;
+}
 
-G4AssemblyVolume *GeometryProperties::GetAssemblyVolume() const{return fAssembly;}
+G4AssemblyVolume *GeometryProperties::GetAssemblyVolume() const
+{
+  return fAssembly;
+}
 
 // Cylindrical Shell
 CylindricalShell::CylindricalShell() {}
@@ -280,15 +296,15 @@ CylindricalShell::CylindricalShell() {}
 CylindricalShell::~CylindricalShell() {}
 
 CylindricalShell::CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,
-                                   G4String material) {
+                                   G4String material)
+{
   fSolid = new G4Tubs(name, rmin, rmax, dz, sphi, dphi);
   SetProperties(material, fSolid);
-  // GeometryProperties("G4_Al", fSolid);
 }
 
 CylindricalShell::CylindricalShell(G4String name, double rmin, double rmax, double dz, double sphi, double dphi,
-                                   G4Material *material) {
+                                   G4Material *material)
+{
   fSolid = new G4Tubs(name, rmin, rmax, dz, sphi, dphi);
   SetProperties(material, fSolid);
-  // GeometryProperties("G4_Al", fSolid);
 }

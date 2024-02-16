@@ -27,7 +27,7 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
 
   double outerBoxHalfX =
       (fSeparation * (fNumOfScintillators + 1) + (fNumOfScintillators * 2 * envelopSolid->GetXHalfLength())) / 2.;
-  double outerBoxHalfY = envelopSolid->GetYHalfLength() + fSeparation ;// / 2.;;
+  double outerBoxHalfY = envelopSolid->GetYHalfLength() + fSeparation; // / 2.;;
   double outerBoxHalfZ = envelopSolid->GetZHalfLength();
 
   double basePlateHalfX = outerBoxHalfX;
@@ -35,11 +35,11 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
   double basePlateHalfZ = outerBoxHalfZ;
 
   double separatorHalfX = fSeparation / 2.;
-  double separatorHalfY = envelopSolid->GetYHalfLength();;
+  double separatorHalfY = envelopSolid->GetYHalfLength();
+  ;
   double separatorHalfZ = outerBoxHalfZ;
 
-  fLogicalVolume =
-      (new Box("SupportPaneEnvelope", outerBoxHalfX, outerBoxHalfY, outerBoxHalfZ))->GetLogicalVolume();
+  fLogicalVolume = (new Box("SupportPaneEnvelope", outerBoxHalfX, outerBoxHalfY, outerBoxHalfZ))->GetLogicalVolume();
   G4LogicalVolume *basePlate =
       (new Box("BasePlate", basePlateHalfX, basePlateHalfY, basePlateHalfZ, "G4_Fe"))->GetLogicalVolume();
   G4LogicalVolume *separator =
@@ -61,52 +61,50 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
     fAssembly->AddPlacedVolume(envelope->GetLogicalVolume(), transVecScint, 0);
   }
 #else
-    new G4PVPlacement(0,                                                     // no rotation
-                      G4ThreeVector(0., -1. * outerBoxHalfY + fSeparation / 2.,0.), // at (0,0,0)
-                      basePlate,                                             // its logical volume
-                      "PhysicalBasePlate",                                   // its name
-                      fLogicalVolume,                                  // its mother  volume
-                      false,                                                 // no boolean operation
-                      0,                                                     // copy number
-                      checkOverlaps);                                        // overlaps checking
-
+  // Place the Base Plate
+  new G4PVPlacement(0,                                                             // no rotation
+                    G4ThreeVector(0., -1. * outerBoxHalfY + fSeparation / 2., 0.), // at (0,0,0)
+                    basePlate,                                                     // its logical volume
+                    "PhysicalBasePlate",                                           // its name
+                    fLogicalVolume,                                                // its mother  volume
+                    false,                                                         // no boolean operation
+                    0,                                                             // copy number
+                    checkOverlaps);                                                // overlaps checking
 
   for (unsigned int i = 0; i < fNumOfScintillators; i++) {
 
-    // Place the Base Plate
-    // Place the separator
-
-    // Place the scintillator Envelope
+    // Place the separator and scintillator envelope
 
     double shift  = (2 * i + 1) * (fSeparation / 2.) + (i * 2 * envelopSolid->GetXHalfLength());
     double transX = -1. * outerBoxHalfX + shift;
     double transY = -1. * outerBoxHalfY + fSeparation + separatorHalfY;
     G4ThreeVector transVec(transX, transY, 0.);
 
-    new G4PVPlacement(0,                                                     // no rotation
-                      transVec, // at (0,0,0)
-                      separator,                                             // its logical volume
-                      "PhysicalSeparator",                                   // its name
-                      fLogicalVolume,                                  // its mother  volume
-                      false,                                                 // no boolean operation
-                      i,                                                     // copy number
-                      checkOverlaps);                                        // overlaps checking
+    new G4PVPlacement(0,                   // no rotation
+                      transVec,            //
+                      separator,           // its logical volume
+                      "PhysicalSeparator", // its name
+                      fLogicalVolume,      // its mother  volume
+                      false,               // no boolean operation
+                      i,                   // copy number
+                      checkOverlaps);      // overlaps checking
 
     G4ThreeVector transVecScint(transX + fSeparation / 2. + envelopSolid->GetXHalfLength(), transY, 0.);
 
-    new G4PVPlacement(0,                                                     // no rotation
-                      transVecScint, // at (0,0,0)
-                      envelope->GetLogicalVolume(),                                             // its logical volume
-                      "PhysicalScintillatorEnvelope",                                   // its name
-                      fLogicalVolume,                                  // its mother  volume
-                      false,                                                 // no boolean operation
-                      i,                                                     // copy number
+    new G4PVPlacement(0,                              // no rotation
+                      transVecScint,                  //
+                      envelope->GetLogicalVolume(),   // its logical volume
+                      "PhysicalScintillatorEnvelope", // its name
+                      fLogicalVolume,                 // its mother  volume
+                      false,                          // no boolean operation
+                      i,                              // copy number
                       checkOverlaps);
   }
 
 #endif
 }
 
+// Tried with Subtraction solid, but generates lot a tetrahedron
 #if (0)
 SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, ScintillatorDetector *envelope)
     : fNumOfScintillators(numOfScintillators), fSeparation(separation)

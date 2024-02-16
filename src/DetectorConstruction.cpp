@@ -28,7 +28,6 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
-
 DetectorConstruction::DetectorConstruction()
 {
   fSDMan = G4SDManager::GetSDMpointer();
@@ -44,7 +43,6 @@ G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const
 G4VPhysicalVolume *DetectorConstruction::Construct()
 {
 
-  // G4NistManager* nist = G4NistManager::Instance();
   //
   // World
   //
@@ -63,35 +61,18 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                                                    0,               // copy number
                                                    checkOverlaps);  // overlaps checking
 
-  ScintillatorDetector *scintDet = (new ScintillatorDetector("CompleteScintillatorDetector", 1. * cm, 1. * cm, 50. * cm,
-                                                             0. * cm, 0.5 * cm, 1. * cm, "ICNSE_PS", "G4_Galactic"));
-
 #ifdef USE_ASSEMBLIES
   G4AssemblyVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetAssemblyVolume();
   G4ThreeVector trans(0., 0., 0.);
   supportPlane->MakeImprint(logicalWorld, trans, 0);
 
-  G4ThreeVector trans2(0.,-50.*cm,0.);
+  G4ThreeVector trans2(0., -50. * cm, 0.);
   supportPlane->MakeImprint(logicalWorld, trans2, 0);
 #else
-  G4LogicalVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetLogicalVolume();
-new G4PVPlacement(0,                                                     // no rotation
-                      G4ThreeVector(), // at (0,0,0)
-                      supportPlane,                                             // its logical volume
-                      "PhysicalPlane",                                   // its name
-                      logicalWorld,                                  // its mother  volume
-                      false,                                                 // no boolean operation
-                      0,                                                     // copy number
-                      checkOverlaps);
-
+  // G4LogicalVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetLogicalVolume();
+  G4LogicalVolume *scintillatorPlane = (new ScintillatorPlane())->GetLogicalVolume();
+  new G4PVPlacement(0, G4ThreeVector(), scintillatorPlane, "PhysicalPlane", logicalWorld, false, 0, checkOverlaps);
 #endif
-
-
-  
- /* SD *scintSD = new SD("Scintillator");
-  fSDMan->AddNewDetector(scintSD);
-  logicalInnerBPShell->SetSensitiveDetector(bpSD);
-  */
 
   std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
   // std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;

@@ -1,5 +1,4 @@
 #include "PrimaryGeneratorAction.h"
-
 #include "G4Box.hh"
 #include "G4Electron.hh"
 #include "G4LogicalVolume.hh"
@@ -17,9 +16,10 @@
 //#include "RadioactiveSource.h"
 #include <G4Geantino.hh>
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() {
+PrimaryGeneratorAction::PrimaryGeneratorAction()
+{
   // Default place holders
-  fParticleGun = new G4ParticleGun(1);
+  fParticleGun                   = new G4ParticleGun(1);
   G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition *particle = particleTable->FindParticle("geantino");
   G4ThreeVector pos(-90. * cm, 0., 0.);
@@ -29,16 +29,20 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() {
   fParticleGun->SetParticleMomentum(0. * GeV);
   fParticleGun->SetParticleDefinition(particle);
 }
-PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
+PrimaryGeneratorAction::~PrimaryGeneratorAction()
+{
+  delete fParticleGun;
+}
 
-void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
+void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event)
+{
 
   // std::cout << "INSIDE GENERATE PRIMARIESSS..........." << std::endl;
   G4ParticleDefinition *particle = fParticleGun->GetParticleDefinition();
 
-  // If particle gun is NOT set from the macro then it will use the default
-  // Cs137 as particle gun
-  #if(0)
+// If particle gun is NOT set from the macro then it will use the default
+// Cs137 as particle gun
+#if (0)
   if (particle == G4Geantino::Geantino()) {
     std::cout << "@@@@ Changed particle from geantino to required ion @@@@" << std::endl;
 
@@ -51,6 +55,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
     fParticleGun->SetParticleDefinition(ion);
     fParticleGun->SetParticleCharge(charge);
   }
-  #endif
+#endif
   fParticleGun->GeneratePrimaryVertex(event);
 }

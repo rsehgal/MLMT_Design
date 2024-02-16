@@ -22,24 +22,24 @@
 #include <TH1F.h>
 #include <algorithm>
 
-
-SD::~SD() {
+SD::~SD()
+{
   // TODO Auto-generated destructor stub
   // delete fp;
 }
 
-SD::SD(const G4String &name) : G4VSensitiveDetector(name) {
-}
+SD::SD(const G4String &name) : G4VSensitiveDetector(name) {}
 
-void SD::Initialize(G4HCofThisEvent *hce) {  }
+void SD::Initialize(G4HCofThisEvent *hce) {}
 
-G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
+G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
+{
 
-  G4Track *track = aStep->GetTrack();
+  G4Track *track        = aStep->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
-  std::cout << "VolumeName : " << track->GetTouchable()->GetVolume(1)->GetName() << " : CopyNum : " << track->GetTouchable()->GetCopyNumber(1) << std::endl;
+  std::cout << "VolumeName : " << track->GetTouchable()->GetVolume(1)->GetName()
+            << " : CopyNum : " << track->GetTouchable()->GetCopyNumber(1) << std::endl;
   return true;
 }
 
-void SD::EndOfEvent(G4HCofThisEvent *) {
-}
+void SD::EndOfEvent(G4HCofThisEvent *) {}

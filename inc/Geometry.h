@@ -196,5 +196,10 @@ public:
 ** inserted in the slots
 */
 class ScintillatorPlane : public GeometryProperties{
+
+public:
+ScintillatorPlane();
+~ScintillatorPlane();
+
 };
 #endif
