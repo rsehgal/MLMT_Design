@@ -15,9 +15,9 @@
 ScintillatorPlane::ScintillatorPlane()
 {
   bool checkOverlaps             = true;
-  ScintillatorDetector *scintDet = (new ScintillatorDetector("CompleteScintillatorDetector", 1. * cm, 1. * cm, 50. * cm,
-                                                             0. * cm, 0.5 * cm, 1. * cm, "ICNSE_PS", "G4_Galactic"));
-  G4LogicalVolume *supportPlane  = (new SupportPlane(50, 0.1 * cm, scintDet))->GetLogicalVolume();
+  ScintillatorDetector *scintDet = (new ScintillatorDetector("CompleteScintillatorDetector", 1.5 * cm, 1.5 * cm, 50. * cm,
+                                                             0. * cm, 1.27 * cm, 1. * cm, "ICNSE_PS", "G4_Galactic"));
+  G4LogicalVolume *supportPlane  = (new SupportPlane(33, 0.1 * cm, scintDet))->GetLogicalVolume();
 
   G4Box *supportBox = static_cast<G4Box *>(supportPlane->GetSolid());
   double planeHalfX = supportBox->GetXHalfLength();

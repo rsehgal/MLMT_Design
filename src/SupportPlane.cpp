@@ -11,6 +11,8 @@
 #include <G4SystemOfUnits.hh>
 #include <G4AssemblyVolume.hh>
 #include "G4PVPlacement.hh"
+#include "SD.h"
+#include <G4SDManager.hh>
 SupportPlane::SupportPlane() {}
 
 SupportPlane::~SupportPlane() {}
@@ -41,9 +43,9 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
 
   fLogicalVolume = (new Box("SupportPaneEnvelope", outerBoxHalfX, outerBoxHalfY, outerBoxHalfZ))->GetLogicalVolume();
   G4LogicalVolume *basePlate =
-      (new Box("BasePlate", basePlateHalfX, basePlateHalfY, basePlateHalfZ, "G4_Fe"))->GetLogicalVolume();
+      (new Box("BasePlate", basePlateHalfX, basePlateHalfY, basePlateHalfZ))->GetLogicalVolume();
   G4LogicalVolume *separator =
-      (new Box("Separtor", separatorHalfX, separatorHalfY, separatorHalfZ, "G4_Fe"))->GetLogicalVolume();
+      (new Box("Separtor", separatorHalfX, separatorHalfY, separatorHalfZ))->GetLogicalVolume();
 
 #ifdef USE_ASSEMBLIES
   // Let create the assembly
@@ -101,6 +103,10 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
                       checkOverlaps);
   }
 
+  G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
+  SD *supportPlaneSD         = new SD("SupportPlane");
+  fSDMan->AddNewDetector(supportPlaneSD);
+  fLogicalVolume->SetSensitiveDetector(supportPlaneSD);
 #endif
 }
 

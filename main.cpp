@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
   G4RunManager *runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
 
-  G4VModularPhysicsList *physicsList = new Shielding; // QGSP_BERT_HP;//QBBC;
+  G4VModularPhysicsList *physicsList = new  QGSP_BERT_HP;//QBBC;
   runManager->SetUserInitialization(physicsList);
 
 #ifdef ICNSE_ENABLE_OPTICAL_PHYSICS

@@ -125,7 +125,7 @@ void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
   myMPT1->AddProperty("SLOWCOMPONENT", photonEnergy, scintilSlow)->SetSpline(true);
   myMPT1->AddProperty("REFLECTIVITY", photonEnergy, reflectivity);
 
-  myMPT1->AddConstProperty("SCINTILLATIONYIELD", 10000. / MeV);
+  myMPT1->AddConstProperty("SCINTILLATIONYIELD", 10. / MeV);
   myMPT1->AddConstProperty("RESOLUTIONSCALE", 1.0);
   myMPT1->AddConstProperty("FASTTIMECONSTANT", 0.9 * ns);
   myMPT1->AddConstProperty("SLOWTIMECONSTANT", 2.1 * ns);

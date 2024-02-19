@@ -20,6 +20,8 @@ class SD : public G4VSensitiveDetector {
 private:
   // static
   unsigned int numOfEventsProcessed;
+  unsigned int fPhotonCounter_LPMT;
+  unsigned int fPhotonCounter_RPMT;
 
 public:
   // SD();
