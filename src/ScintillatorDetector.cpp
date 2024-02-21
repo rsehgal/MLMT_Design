@@ -60,8 +60,8 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                     1,                                                   // copy number
                     checkOverlaps);
 
-  /*G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
-  SD *scintSD         = new SD("Scintillator");
+  G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
+  SD *scintSD         = new SD("ScintillatorDetector",this);
   fSDMan->AddNewDetector(scintSD);
-  logicalScintillator->SetSensitiveDetector(scintSD);*/
+  fLogicalVolume->SetSensitiveDetector(scintSD);
 }

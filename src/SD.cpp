@@ -21,6 +21,9 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <algorithm>
+#include "Geometry.h"
+#include "Data.h"
+#include "DetectorData.h"
 
 SD::~SD()
 {
@@ -28,12 +31,15 @@ SD::~SD()
   // delete fp;
 }
 
-SD::SD(const G4String &name) : G4VSensitiveDetector(name) {}
+SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name) {}
 
+SD::SD(const G4String &name, GeometryProperties *geom) : G4VSensitiveDetector(name), fDetName(name), fGeom(geom) {}
 void SD::Initialize(G4HCofThisEvent *hce)
 {
-  fPhotonCounter_LPMT = 0;
-  fPhotonCounter_RPMT = 0;
+  //fPhotonCounter_LPMT = 0;
+  //fPhotonCounter_RPMT = 0;
+  // static_cast<PMT*>(fGeom)->Reset();
+  fDataMap.clear();
 }
 
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
@@ -54,11 +60,26 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
               << " : CopyNum : " << track->GetTouchable()->GetCopyNumber() << std::endl;
   }
   if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalPMT" && aStep->GetStepLength() == 0) {
-    if(track->GetTouchable()->GetCopyNumber()==0)
-    fPhotonCounter_LPMT++;
+    //if (track->GetTouchable()->GetCopyNumber() == 0) fPhotonCounter_LPMT++;
+    //if (track->GetTouchable()->GetCopyNumber() == 1) fPhotonCounter_RPMT++;
 
-    if(track->GetTouchable()->GetCopyNumber()==1)
-    fPhotonCounter_RPMT++;
+    if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalPMT" && aStep->GetStepLength() == 0) {
+      unsigned int detid = (66 * track->GetTouchable()->GetVolume(3)->GetCopyNo()) +
+                           (33 * track->GetTouchable()->GetVolume(2)->GetCopyNo()) +
+                           track->GetTouchable()->GetVolume(1)->GetCopyNo();
+      // std::cout << "DetID : " << detid << std::endl;
+      if (fDataMap.count(detid)) {
+        if (track->GetTouchable()->GetCopyNumber() == 0) fDataMap[detid]->fQNear++;
+        if (track->GetTouchable()->GetCopyNumber() == 1) fDataMap[detid]->fQFar++;
+
+      } else {
+        fDataMap[detid] = std::make_shared<DetectorData>(detid);
+        if (track->GetTouchable()->GetCopyNumber() == 0) fDataMap[detid]->fQNear++;
+        if (track->GetTouchable()->GetCopyNumber() == 1) fDataMap[detid]->fQFar++;
+      }
+    }
+
+    static_cast<PMT *>(fGeom)->Inc();
 
     track->SetTrackStatus(fStopAndKill);
   }
@@ -67,6 +88,18 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
 
 void SD::EndOfEvent(G4HCofThisEvent *)
 {
-  std::cout << "No of Photon reaching Left PMT : " << fPhotonCounter_LPMT << std::endl;
-  std::cout << "No of Photon reaching Right PMT : " << fPhotonCounter_RPMT << std::endl;
+  // std::cout << "DetName : " << fDetName << std::endl;
+  /*if (fDetName == "PMT") {
+    std::cout << "No of Photon reaching Left PMT : " << fPhotonCounter_LPMT
+              << " : From PMT : " << static_cast<PMT *>(fGeom)->GetCounter() << std::endl;
+    std::cout << "No of Photon reaching Right PMT : " << fPhotonCounter_RPMT
+              << " : From PMT : " << static_cast<PMT *>(fGeom)->GetCounter() << std::endl;
+  }*/
+  std::cout << "======================================" << std::endl;
+  for (const auto &pair : fDataMap) {
+    // std::cout << "Key: " << pair.first << ", Value: " << pair.second->Print() << std::endl;
+    pair.second->Print();
+  }
+  // Fill the data and clear the map
+  fDataMap.clear();
 }

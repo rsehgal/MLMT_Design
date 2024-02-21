@@ -17,6 +17,8 @@ class G4AssemblyVolume;
 
 #include <G4CSGSolid.hh>
 #include <G4String.hh>
+#include <vector>
+
 class G4GenericMessenger;
 class G4VSolid;
 class GeometryProperties {
@@ -129,11 +131,15 @@ public:
 class PMT : public GeometryProperties{
 private:
   unsigned int fCounter;
+  std::vector<unsigned int> fTimeVector;
 
 public:
   PMT();
   PMT(G4String name, double rmin, double rmax, double dz, double sphi = 0., double dphi = 2 * M_PI,
       G4String material = G4String("G4_Galactic"));
+  void Inc();
+  void Reset();
+  unsigned int GetCounter();
 
   ~PMT();
 };
