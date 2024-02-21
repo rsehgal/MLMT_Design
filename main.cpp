@@ -23,7 +23,7 @@
 
 #include <TFile.h>
 
-//#include "Analysis.h"
+#include "Analysis.h"
 //#include "Physics.h"
 #include <unistd.h> //To get process id
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
   // CLHEP::HepRandom::setTheSeed(time(0));
   CLHEP::HepRandom::setTheSeed(static_cast<int>(getpid()));
 #endif
-  // Analysis *anal = Analysis::Create("icnse.root");
+  Analysis *anal = Analysis::Create("mlmt.root");
   // TFile *fp = new TFile("icnse_data.root","RECREATE");
   // G4String outFileName = argv[2];
   // TFile *fp = new TFile(outFileName,"RECREATE");
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
   fp->Close();
   delete visManager;
   delete runManager;
-  // fp->Close();
+  fp->Close();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

@@ -24,7 +24,7 @@
 #include "Geometry.h"
 #include "Data.h"
 #include "DetectorData.h"
-
+#include "Analysis.h"
 SD::~SD()
 {
   // TODO Auto-generated destructor stub
@@ -36,8 +36,8 @@ SD::SD(const G4String &name) : G4VSensitiveDetector(name), fDetName(name) {}
 SD::SD(const G4String &name, GeometryProperties *geom) : G4VSensitiveDetector(name), fDetName(name), fGeom(geom) {}
 void SD::Initialize(G4HCofThisEvent *hce)
 {
-  //fPhotonCounter_LPMT = 0;
-  //fPhotonCounter_RPMT = 0;
+  // fPhotonCounter_LPMT = 0;
+  // fPhotonCounter_RPMT = 0;
   // static_cast<PMT*>(fGeom)->Reset();
   fDataMap.clear();
 }
@@ -60,8 +60,8 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
               << " : CopyNum : " << track->GetTouchable()->GetCopyNumber() << std::endl;
   }
   if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalPMT" && aStep->GetStepLength() == 0) {
-    //if (track->GetTouchable()->GetCopyNumber() == 0) fPhotonCounter_LPMT++;
-    //if (track->GetTouchable()->GetCopyNumber() == 1) fPhotonCounter_RPMT++;
+    // if (track->GetTouchable()->GetCopyNumber() == 0) fPhotonCounter_LPMT++;
+    // if (track->GetTouchable()->GetCopyNumber() == 1) fPhotonCounter_RPMT++;
 
     if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalPMT" && aStep->GetStepLength() == 0) {
       unsigned int detid = (66 * track->GetTouchable()->GetVolume(3)->GetCopyNo()) +
@@ -98,7 +98,10 @@ void SD::EndOfEvent(G4HCofThisEvent *)
   std::cout << "======================================" << std::endl;
   for (const auto &pair : fDataMap) {
     // std::cout << "Key: " << pair.first << ", Value: " << pair.second->Print() << std::endl;
+    std::cout << "Key: " << pair.first << ", Value: " << pair.second->fQNear << " : " << pair.second->fQFar
+              << std::endl;
     pair.second->Print();
+    Analysis::Instance()->GetData()->Fill(0,pair.first,0,0,pair.second->fQNear,pair.second->fQFar);
   }
   // Fill the data and clear the map
   fDataMap.clear();
