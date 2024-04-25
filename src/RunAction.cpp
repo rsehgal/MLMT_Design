@@ -16,7 +16,7 @@
 //#include "SD.h"
 #include <G4VUserDetectorConstruction.hh>
 #include <TFile.h>
-#include "Analysis.h"
+#include "AnalysisBlock.h"
 using namespace std;
 
 RunAction::RunAction() : G4UserRunAction() {}
@@ -44,7 +44,7 @@ void RunAction::EndOfRunAction(const G4Run *run)
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
 
-  Analysis::Instance()->Close();
+  AnalysisBlock::Instance()->Close();
   /*PrintSummary("SensitiveHollowSpace",nofEvents);
   fOutFile->cd();
   Write();

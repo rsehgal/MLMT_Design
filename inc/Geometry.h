@@ -208,4 +208,35 @@ ScintillatorPlane();
 ~ScintillatorPlane();
 
 };
+/*
+** A Square scintillator block with four PMTs attached
+*/
+class ScintillatorBlock : public GeometryProperties{
+private:
+  double fScintillatorEnvelopeHalfX;
+  double fScintillatorEnvelopeHalfY;
+  double fScintillatorEnvelopeHalfZ;
+  double fScintHalfX;
+  double fScintHalfY;
+  double fScintHalfZ;
+  double fPmtRmin;
+  double fPmtRmax;
+  double fPmtDz;
+
+  unsigned int fCounter;
+
+public:
+  ScintillatorBlock();
+  ScintillatorBlock(G4String name, double scintHalfX, double scintHalfY, double scintHalfZ, double pmtRMin,
+                       double pmtRMax, double pmtDz, G4String scintillatorMaterial=G4String("G4_Galactic"), G4String pmtMaterial = G4String("G4_Galactic"));
+  /*ScintillatorDetector(G4String name, double scintHalfX, double scintHalfY, double scintHalfZ, double pmtRMin,
+                       double pmtRMax, double pmtDz, G4Material *material);*/
+
+  ~ScintillatorBlock();
+  unsigned int GetHalfX() const;
+  unsigned int GetHalfY() const;
+  unsigned int GetHalfZ() const;
+
+};
+
 #endif

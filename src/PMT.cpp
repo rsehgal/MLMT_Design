@@ -7,7 +7,7 @@
 #include "Geometry.h"
 #include <G4LogicalVolume.hh>
 #include <G4SDManager.hh>
-#include "SD.h"
+#include "SDBlock.h"
 PMT::PMT() {}
 
 PMT::~PMT() {}
@@ -17,7 +17,7 @@ PMT::PMT(G4String name, double rmin, double rmax, double dz, double sphi, double
   fCounter = 0;
   fLogicalVolume = (new CylindricalShell(name, rmin, rmax, dz, sphi, dphi, material))->GetLogicalVolume();
   G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
-  SD *pmtSD       = new SD("PMT",this);
+  SDBlock *pmtSD       = new SDBlock("PMT");
   fSDMan->AddNewDetector(pmtSD);
   fLogicalVolume->SetSensitiveDetector(pmtSD);
 }

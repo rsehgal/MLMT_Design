@@ -44,7 +44,7 @@ void SD::Initialize(G4HCofThisEvent *hce)
 
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
 {
-
+#if(0)
   G4Track *track        = aStep->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
   /*
@@ -82,7 +82,8 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     static_cast<PMT *>(fGeom)->Inc();
 
     track->SetTrackStatus(fStopAndKill);
-  }
+}
+#endif
   return true;
 }
 
@@ -95,7 +96,7 @@ void SD::EndOfEvent(G4HCofThisEvent *)
     std::cout << "No of Photon reaching Right PMT : " << fPhotonCounter_RPMT
               << " : From PMT : " << static_cast<PMT *>(fGeom)->GetCounter() << std::endl;
   }*/
-  std::cout << "======================================" << std::endl;
+  //std::cout << "======================================" << std::endl;
   for (const auto &pair : fDataMap) {
     // std::cout << "Key: " << pair.first << ", Value: " << pair.second->Print() << std::endl;
     std::cout << "Key: " << pair.first << ", Value: " << pair.second->fQNear << " : " << pair.second->fQFar
