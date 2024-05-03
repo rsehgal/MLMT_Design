@@ -71,7 +71,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 #else
   // G4LogicalVolume *supportPlane = (new SupportPlane(50, 0.1 * cm, scintDet))->GetLogicalVolume();
   //G4LogicalVolume *scintillatorPlane = (new ScintillatorPlane())->GetLogicalVolume();
-  G4LogicalVolume *scintillatorBlock = (new ScintillatorBlock("ScintillatorBlock",50*cm,3*cm,50*cm,0,3*cm,1*cm,"ICNSE_PS","G4_Galactic"))->GetLogicalVolume();
+  G4LogicalVolume *scintillatorBlock = (new ScintillatorBlock("ScintillatorBlock",25*cm,3*cm,25*cm,0,3*cm,1*cm,"ICNSE_PS","G4_Galactic"))->GetLogicalVolume();
   new G4PVPlacement(0, G4ThreeVector(), scintillatorBlock, "PhysicalPlane", logicalWorld, false, 0, checkOverlaps);
 #endif
 

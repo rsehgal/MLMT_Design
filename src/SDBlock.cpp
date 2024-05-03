@@ -59,7 +59,7 @@ G4bool SDBlock::ProcessHits(G4Step *aStep, G4TouchableHistory *)
           if (track->GetTouchable()->GetCopyNumber() == 3) 
           fDataBlock->fQWest++;
         
-
+          track->SetTrackStatus(fStopAndKill);
       
     }
 

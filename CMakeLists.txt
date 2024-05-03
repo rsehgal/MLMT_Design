@@ -105,7 +105,14 @@ endif()
 #add_executable(Plot_all Plots/Plot_all.cpp)
 #target_link_libraries(Plot_all ${ROOT_LIBRARIES})
 #
-#add_executable(testplot Plots/testplot.cpp)
-#target_link_libraries(testplot ${ROOT_LIBRARIES})
+add_executable(Block Block.cpp)
+target_link_libraries(Block ${ROOT_LIBRARIES})
+
+add_executable(TestData TestData.cpp)
+target_link_libraries(TestData ${ROOT_LIBRARIES})
+
+add_executable(Plot Plot.cpp)
+target_link_libraries(Plot ${ROOT_LIBRARIES})
+
 #
 ##target_link_libraries(main ${Geant4_LIBRARIES} Tomo)
