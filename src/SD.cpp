@@ -45,6 +45,8 @@ void SD::Initialize(G4HCofThisEvent *hce)
 G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
 {
 
+  //std::cout <<"Inside PROCESS HITSSSSS,,,,,," << std::endl;
+
   G4Track *track        = aStep->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
   /*
@@ -79,10 +81,20 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
       }
     }
 
+    
     static_cast<PMT *>(fGeom)->Inc();
-
     track->SetTrackStatus(fStopAndKill);
   }
+
+ // std::cout <<"RAMANN : " << track->GetTouchable()->GetVolume()->GetName() << std::endl;
+    if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalScintillator") {
+      //std::cout << "Scintillator hits" << std::endl;
+        if(particleName=="mu-"){
+          std::cout << "Scintillator Copy : " << track->GetTouchable()->GetVolume(1)->GetCopyNo() << " : "
+          << track->GetTouchable()->GetVolume(2)->GetCopyNo() << std::endl;
+          std::cout << aStep->GetPreStepPoint()->GetPosition() << std::endl;
+        }
+    }
   return true;
 }
 

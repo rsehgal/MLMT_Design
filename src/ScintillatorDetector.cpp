@@ -30,9 +30,9 @@ ScintillatorDetector::ScintillatorDetector(G4String name, double scintHalfX, dou
                        ->GetLogicalVolume();
 
   G4LogicalVolume *logicalScintillator =
-      (new Scintillator("Scintillator", fScintHalfX, fScintHalfY, fScintHalfZ, "ICNSE_PS"))->GetLogicalVolume();
+      (new Scintillator("Scintillator", fScintHalfX, fScintHalfY, fScintHalfZ, scintillatorMaterial))->GetLogicalVolume();
 
-  G4LogicalVolume *logicalPMT = (new PMT("PMT", fPmtRmin, fPmtRmax, fPmtDz))->GetLogicalVolume();
+  G4LogicalVolume *logicalPMT = (new PMT("PMT", fPmtRmin, fPmtRmax, fPmtDz, 0., 2*M_PI, pmtMaterial))->GetLogicalVolume();
 
   bool checkOverlaps = true;
   new G4PVPlacement(0,                      // no rotation

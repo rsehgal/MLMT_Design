@@ -102,11 +102,12 @@ SupportPlane::SupportPlane(unsigned int numOfScintillators, double separation, S
                       i,                              // copy number
                       checkOverlaps);
   }
-
+  /*
   G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
   SD *supportPlaneSD         = new SD("SupportPlane");
   fSDMan->AddNewDetector(supportPlaneSD);
   fLogicalVolume->SetSensitiveDetector(supportPlaneSD);
+  */
 #endif
 }
 
