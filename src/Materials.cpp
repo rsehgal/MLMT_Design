@@ -32,7 +32,9 @@ Materials::Materials() {
 
   CreateBoratedPolyethylene();
   CreateHighDensityPolyethylene();
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
   CreateScintillatorMaterial();
+#endif
 }
 
 Materials::~Materials() {}
@@ -78,6 +80,7 @@ void Materials::CreateHighDensityPolyethylene() {
   fMaterialMap["ICNSE_HDPE"] = fHDPE;
 }
 
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
 void Materials::CreateScintillatorMaterial() {
   G4NistManager *nistManager = G4NistManager::Instance();
   G4Material *scintMaterial = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
@@ -183,6 +186,7 @@ G4SurfaceProperty *Materials::GetOpticalSurface(G4String surfaceName) {
   opticalSurface->SetMaterialPropertiesTable(surfaceProperties);
   return opticalSurface;
 }
+#endif
 
 G4Material *Materials::GetBP() const { return fBP; }
 G4Material *Materials::GetHDPE() const { return fHDPE; }
@@ -204,7 +208,7 @@ G4Material *Materials::FindOrBuildMaterial(G4String material) {
     }
   }
 }
-
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
 void Materials::AttachAirOpticalProperties(G4Material *material) {
 
   std::vector<G4double> photonEnergy = {
@@ -220,3 +224,4 @@ void Materials::AttachAirOpticalProperties(G4Material *material) {
   Air_MPT->AddProperty("RINDEX", photonEnergy, refAir)->SetSpline(true);
   material->SetMaterialPropertiesTable(Air_MPT);
 }
+#endif
