@@ -25,6 +25,7 @@
 #include "Data.h"
 #include "DetectorData.h"
 #include "Analysis.h"
+#include "AnalysisT.h"
 SD::~SD()
 {
   // TODO Auto-generated destructor stub
@@ -90,9 +91,9 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     if (track->GetTouchable()->GetVolume()->GetName() == "PhysicalScintillator") {
       //std::cout << "Scintillator hits" << std::endl;
         if(particleName=="mu-"){
-          std::cout << "Scintillator Copy : " << track->GetTouchable()->GetVolume(1)->GetCopyNo() << " : "
-          << track->GetTouchable()->GetVolume(2)->GetCopyNo() << std::endl;
-          std::cout << aStep->GetPreStepPoint()->GetPosition() << std::endl;
+          //std::cout << "Scintillator Copy : " << track->GetTouchable()->GetVolume(1)->GetCopyNo() << " : "
+          //<< track->GetTouchable()->GetVolume(2)->GetCopyNo() << std::endl;
+          //std::cout << aStep->GetPreStepPoint()->GetPosition() << std::endl;
         }
     }
   return true;
@@ -107,13 +108,13 @@ void SD::EndOfEvent(G4HCofThisEvent *)
     std::cout << "No of Photon reaching Right PMT : " << fPhotonCounter_RPMT
               << " : From PMT : " << static_cast<PMT *>(fGeom)->GetCounter() << std::endl;
   }*/
-  std::cout << "======================================" << std::endl;
+  //std::cout << "======================================" << std::endl;
   for (const auto &pair : fDataMap) {
     // std::cout << "Key: " << pair.first << ", Value: " << pair.second->Print() << std::endl;
-    std::cout << "Key: " << pair.first << ", Value: " << pair.second->fQNear << " : " << pair.second->fQFar
-              << std::endl;
-    pair.second->Print();
-    Analysis::Instance()->GetData()->Fill(0,pair.first,0,0,pair.second->fQNear,pair.second->fQFar);
+    //std::cout << "Key: " << pair.first << ", Value: " << pair.second->fQNear << " : " << pair.second->fQFar
+    //          << std::endl;
+    //pair.second->Print();
+    AnalysisT<Data>::Instance()->GetData()->Fill(0,pair.first,0,0,pair.second->fQNear,pair.second->fQFar);
   }
   // Fill the data and clear the map
   fDataMap.clear();
