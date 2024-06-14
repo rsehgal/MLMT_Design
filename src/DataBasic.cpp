@@ -1,0 +1,46 @@
+/*
+**	Filename : DataBasic.cpp
+**	2024-06-13
+**	username : rsehgal
+*/
+#include <iostream>
+#include "DataBasic.h"
+#include "Point3D.h"
+#include <TTree.h>
+
+DataBasic::DataBasic() {}
+
+DataBasic::DataBasic(Point3D *pt, unsigned long int tm)
+{
+    fPoint.Set(pt->GetX(), pt->GetY(), pt->GetZ());
+    fTime = tm;
+}
+
+DataBasic::DataBasic(double x, double y, double z, unsigned long int tm)
+{
+    fPoint.Set(x, y, z);
+    fTime = tm;
+}
+
+void DataBasic::Fill(Point3D *pt, unsigned long int tm)
+{
+    fPoint.Set(pt->GetX(), pt->GetY(), pt->GetZ());
+    fTime = tm;
+}
+
+void DataBasic::Fill(double x, double y, double z, unsigned long int tm)
+{
+    fPoint.Set(x, y, z);
+    fTime = tm;
+    ;
+}
+
+void DataBasic::Fill()
+{
+    fTree->Fill();
+}
+
+void DataBasic::Write()
+{
+    fTree->Write();
+}
