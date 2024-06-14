@@ -32,7 +32,9 @@ G4bool SDBasic::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     //std::cout << point1->GetPosition() << std::endl;
     G4ThreeVector prepos = point1->GetPosition();
     G4ThreeVector postpos = point2->GetPosition();
-    std::cout << "PrePost : " << prepos << " : PostPos : " << postpos << std::endl;
+    
+    if(track->GetGlobalTime())
+    std::cout << "PrePost : " << prepos << " : PostPos : " << postpos << " : GlobalTime : " << track->GetGlobalTime() << std::endl;
     AnalysisT<DataBasic>::Instance()->GetData()->Fill(prepos.x(),prepos.y(),prepos.z(),track->GetGlobalTime());
     }
   }

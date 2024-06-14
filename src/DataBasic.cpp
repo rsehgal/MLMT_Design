@@ -16,26 +16,26 @@ DataBasic::DataBasic()
   fTree->Branch("Time", &fTime);
 }
 
-DataBasic::DataBasic(Point3D *pt, unsigned long int tm)
+DataBasic::DataBasic(Point3D *pt, double tm)
 {
   fPoint.Set(pt->GetX(), pt->GetY(), pt->GetZ());
   fTime = tm;
 }
 
-DataBasic::DataBasic(double x, double y, double z, unsigned long int tm)
+DataBasic::DataBasic(double x, double y, double z, double tm)
 {
   fPoint.Set(x, y, z);
   fTime = tm;
 }
 
-void DataBasic::Fill(Point3D *pt, unsigned long int tm)
+void DataBasic::Fill(Point3D *pt, double tm)
 {
   fPoint.Set(pt->GetX(), pt->GetY(), pt->GetZ());
   fTime = tm;
   Fill();
 }
 
-void DataBasic::Fill(double x, double y, double z, unsigned long int tm)
+void DataBasic::Fill(double x, double y, double z, double tm)
 {
   fPoint.Set(x, y, z);
   fTime = tm;
