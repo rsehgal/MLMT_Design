@@ -5,6 +5,7 @@
 #include "G4VSensitiveDetector.hh"
 #include "AnalysisT.h"
 #include "DataBasic.h"
+#include "G4VPhysicalVolume.hh"
 
 SDBasic::SDBasic(G4String name) : G4VSensitiveDetector(name), fDetName(name)
 {
@@ -26,10 +27,14 @@ G4bool SDBasic::ProcessHits(G4Step *aStep, G4TouchableHistory *)
   G4String particleName = track->GetDefinition()->GetParticleName();
   bool isPrimary        = (track->GetParentID() == 0);
   if (isPrimary && point1->GetStepStatus() == fGeomBoundary) {
+    G4VPhysicalVolume *volume = point1->GetPhysicalVolume();
+    if(volume->GetName()=="PhysicalPlane"){
     //std::cout << point1->GetPosition() << std::endl;
-    G4ThreeVector pos = aStep->GetPreStepPoint()->GetPosition();
-    std::cout << "Pos : " << pos << std::endl;
-    AnalysisT<DataBasic>::Instance()->GetData()->Fill(pos.x(),pos.y(),pos.z(),track->GetGlobalTime());
+    G4ThreeVector prepos = point1->GetPosition();
+    G4ThreeVector postpos = point2->GetPosition();
+    std::cout << "PrePost : " << prepos << " : PostPos : " << postpos << std::endl;
+    AnalysisT<DataBasic>::Instance()->GetData()->Fill(prepos.x(),prepos.y(),prepos.z(),track->GetGlobalTime());
+    }
   }
 }
 

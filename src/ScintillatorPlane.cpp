@@ -16,22 +16,23 @@
 #include "SDBasic.h"
 ScintillatorPlane::ScintillatorPlane()
 {
-  bool checkOverlaps             = true;
-  ScintillatorDetector *scintDet = (new ScintillatorDetector("CompleteScintillatorDetector", 1.5 * cm, 1.5 * cm, 50. * cm,
-                                                             0. * cm, 1.27 * cm, 1. * cm, "G4_Galactic", "G4_Galactic"));
-  G4LogicalVolume *supportPlane  = (new SupportPlane(33, 0.1 * cm, scintDet))->GetLogicalVolume();
+  bool checkOverlaps = true;
+  ScintillatorDetector *scintDet =
+      (new ScintillatorDetector("CompleteScintillatorDetector", 1.5 * cm, 1.5 * cm, 50. * cm, 0. * cm, 1.27 * cm,
+                                1. * cm, "G4_Galactic", "G4_Galactic"));
+  G4LogicalVolume *supportPlane = (new SupportPlane(33, 0.1 * cm, scintDet))->GetLogicalVolume();
 
   G4Box *supportBox = static_cast<G4Box *>(supportPlane->GetSolid());
-  double planeHalfX = supportBox->GetXHalfLength()+0.000001;
-  double planeHalfY = supportBox->GetYHalfLength()+0.000001;
-  double planeHalfZ = supportBox->GetZHalfLength()+0.000001;
+  double planeHalfX = supportBox->GetXHalfLength() + 0.000001;
+  double planeHalfY = supportBox->GetYHalfLength() + 0.000001;
+  double planeHalfZ = supportBox->GetZHalfLength() + 0.000001;
 
   double planeHalfXZ = std::max(planeHalfX, planeHalfZ);
   fLogicalVolume     = (new Box("ScintillatorPlane", planeHalfXZ, 2 * planeHalfY, planeHalfXZ))->GetLogicalVolume();
 
   G4RotationMatrix *rotation = new G4RotationMatrix();
   rotation->rotateY(90.0 * deg);
-  
+
   new G4PVPlacement(0,                                       // no rotation
                     G4ThreeVector(0., -1. * planeHalfY, 0.), //
                     supportPlane,                            // its logical volume
@@ -49,10 +50,9 @@ ScintillatorPlane::ScintillatorPlane()
                     false,                             // no boolean operation
                     1,                                 // copy number
                     checkOverlaps);
-                    
 
-G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
-  SDBasic *scintillatorPlaneSD       = new SDBasic("ScintillatorPlane");
+  G4SDManager *fSDMan          = G4SDManager::GetSDMpointer();
+  SDBasic *scintillatorPlaneSD = new SDBasic("ScintillatorPlane");
   fSDMan->AddNewDetector(scintillatorPlaneSD);
   fLogicalVolume->SetSensitiveDetector(scintillatorPlaneSD);
 }
