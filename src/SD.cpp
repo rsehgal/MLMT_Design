@@ -94,6 +94,7 @@ G4bool SD::ProcessHits(G4Step *aStep, G4TouchableHistory *)
           //std::cout << "Scintillator Copy : " << track->GetTouchable()->GetVolume(1)->GetCopyNo() << " : "
           //<< track->GetTouchable()->GetVolume(2)->GetCopyNo() << std::endl;
           //std::cout << aStep->GetPreStepPoint()->GetPosition() << std::endl;
+          
         }
     }
   return true;

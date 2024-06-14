@@ -26,6 +26,7 @@
 #include "Analysis.h"
 #include "AnalysisT.h"
 #include "Data.h"
+#include "DataBasic.h"
 //#include "Physics.h"
 #include <unistd.h> //To get process id
 
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
 #endif
   //Analysis *anal = Analysis::Create("mlmt.root");
   AnalysisT<Data> *anal = AnalysisT<Data>::Create("mlmtT.root");
+  AnalysisT<DataBasic> *analBasic = AnalysisT<DataBasic>::Create("mlmt_basic_data.root");
 
   // TFile *fp = new TFile("icnse_data.root","RECREATE");
   // G4String outFileName = argv[2];

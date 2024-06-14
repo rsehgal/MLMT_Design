@@ -9,7 +9,7 @@
 #include <string>
 
 class TFile;
-
+#include <TFile.h>
 template <typename T>
 class AnalysisT {
 
@@ -42,10 +42,13 @@ public:
   }
   void Close()
   {
+    fp->cd();
     fData->Write();
     fp->Close();
   }
   T *GetData() const { return fData; }
+
+  TFile *GetFilePointer() const {return fp;}
 };
 template <typename T>
 AnalysisT<T> *AnalysisT<T>::s_instance = nullptr;

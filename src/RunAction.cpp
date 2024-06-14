@@ -19,6 +19,7 @@
 #include "Analysis.h"
 #include "AnalysisT.h"
 #include "Data.h"
+#include "DataBasic.h"
 using namespace std;
 
 RunAction::RunAction() : G4UserRunAction() {}
@@ -47,6 +48,7 @@ void RunAction::EndOfRunAction(const G4Run *run)
   if (nofEvents == 0) return;
 
   AnalysisT<Data>::Instance()->Close();
+  AnalysisT<DataBasic>::Instance()->Close();
   /*PrintSummary("SensitiveHollowSpace",nofEvents);
   fOutFile->cd();
   Write();
