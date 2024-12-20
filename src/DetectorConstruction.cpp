@@ -53,6 +53,27 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                                                    0,               // copy number
                                                    checkOverlaps);  // overlaps checking
 
+
+  //G4LogicalVolume *scintillatorCrystalLogical = (new Scintillator("ScintillatorCrystal",0.5*cm,0.5*cm,15*cm))->GetLogicalVolume();
+  G4LogicalVolume *logical = (new ScintillatorPlane("ScintillatorPlane",30))->GetLogicalVolume();
+
+  std::vector<double> yPosVec={-30.*cm,-10*cm,10*cm,30.*cm};
+
+ 
+  for(unsigned int i = 0 ; i < yPosVec.size() ; i++){
+  
+//  G4VPhysicalVolume *scintillatorCrystalPhysical = 
+new G4PVPlacement(0,
+									G4ThreeVector(0,yPosVec[i],0),
+									logical,
+									"Physical",
+									 logicalWorld,
+									 false,
+									i,
+									checkOverlaps);
+
+
+  }
   /*
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);
