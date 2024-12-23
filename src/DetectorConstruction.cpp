@@ -28,19 +28,26 @@
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
 
-DetectorConstruction::DetectorConstruction() { fSDMan = G4SDManager::GetSDMpointer(); }
+DetectorConstruction::DetectorConstruction()
+{
+  fSDMan = G4SDManager::GetSDMpointer();
+}
 
 DetectorConstruction::~DetectorConstruction() {}
 
-G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const { return logicalWorld; }
+G4LogicalVolume *DetectorConstruction::GetLogicalWorld() const
+{
+  return logicalWorld;
+}
 
-G4VPhysicalVolume *DetectorConstruction::Construct() {
+G4VPhysicalVolume *DetectorConstruction::Construct()
+{
 
   // G4NistManager* nist = G4NistManager::Instance();
   //
   // World
   //
-  G4bool checkOverlaps = true;
+  G4bool checkOverlaps   = true;
   G4double world_sizeXYZ = 200 * cm;
   logicalWorld =
       (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, "G4_AIR"))->GetLogicalVolume();
@@ -53,6 +60,48 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
                                                    0,               // copy number
                                                    checkOverlaps);  // overlaps checking
 
+  // G4LogicalVolume *scintillatorCrystalLogical = (new
+  // Scintillator("ScintillatorCrystal",0.5*cm,0.5*cm,15*cm))->GetLogicalVolume();
+
+  double scintHalfx = 0.5 * cm;
+  double scintHalfy = 0.5 * cm;
+  double scintHalfz = 15 * cm;
+
+  Scintillator *scintillator = new Scintillator("ScintillatorCrystal", scintHalfx, scintHalfy, scintHalfz);
+
+  ScintillatorBunch *scintillatorBunch = new ScintillatorBunch("ScintillatorBunch", scintillator, 5);
+
+  ScintillatorPlane *scintillatorPlane = new ScintillatorPlane("ScintillatorPlane", scintillatorBunch, 5);
+  G4LogicalVolume *logical             = scintillatorPlane->GetLogicalVolume();
+
+  G4Box *scintBunch      = static_cast<G4Box *>(scintillatorBunch->GetLogicalVolume()->GetSolid());
+  double scintBunchHalfx = scintBunch->GetXHalfLength();
+  double scintBunchHalfy = scintBunch->GetYHalfLength();
+  double scintBunchHalfz = scintBunch->GetZHalfLength();
+
+  Scintillator *maskingScintillator =
+      new Scintillator("MaskingScintillatorCrystal", scintBunchHalfx, scintBunchHalfy, scintBunchHalfz);
+  ScintillatorPlane *maskingScintillatorPlane =
+      new ScintillatorPlane("MaskingScintillatorPlane", maskingScintillator, 5);
+  G4LogicalVolume *logicalMaskingPlane = maskingScintillatorPlane->GetLogicalVolume();
+
+  /*
+  G4LogicalVolume *logical = (new ScintillatorPlane("ScintillatorPlane",30))->GetLogicalVolume();
+  */
+  std::vector<double> yPosVec     = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
+  std::vector<double> yMaskPosVec = {-30. * cm + 1.5 * cm, -10 * cm + 1.5 * cm, 10 * cm + 1.5 * cm,
+                                     30. * cm + 1.5 * cm};
+
+  for (unsigned int i = 0; i < yPosVec.size(); i++) {
+
+    //  G4VPhysicalVolume *scintillatorCrystalPhysical =
+    new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logical, "PhysicalScintLayer", logicalWorld, false, i,
+                      checkOverlaps);
+
+    new G4PVPlacement(0, G4ThreeVector(0, yMaskPosVec[i], 0), logicalMaskingPlane, "PhysicalMaskingLayer", logicalWorld,
+                      false, i, checkOverlaps);
+  }
+
   /*
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);
@@ -60,7 +109,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   */
 
   std::cout << "========== TOTAL WEIGHT of DETECTOR =============" << std::endl;
-  //std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
+  // std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout << "=================================================" << std::endl;
   return physWorld;
 }

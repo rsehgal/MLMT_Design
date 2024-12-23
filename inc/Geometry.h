@@ -13,7 +13,8 @@ class G4Material;
 class G4VSolid;
 class G4Tubs;
 class G4SubtractionSolid;
-
+class Scintillator;
+class ScintillatorBunch;
 #include <G4CSGSolid.hh>
 #include <G4String.hh>
 class G4GenericMessenger;
@@ -109,13 +110,13 @@ public:
 /*
 ** A class to represent Bare Scintillator
 */
-class Scintillator {
+class Scintillator : public GeometryProperties {
 private:
   unsigned int fCounter;
 
 public:
   Scintillator();
-  Scintillator(G4String name, double halfx, double halfy, double halfz, G4String material = G4String("G4_Galactic"));
+  Scintillator(G4String name, double halfx, double halfy, double halfz, G4String material = G4String("G4_PLASTIC_SC_VINYLTOLUENE"));
   Scintillator(G4String name, double halfx, double halfy, double halfz, G4Material *material);
 
   ~Scintillator();
@@ -192,6 +193,21 @@ public:
 ** A full assembly of support structure with scintillator detector
 ** inserted in the slots
 */
-class ScintillatorPlane {
+class ScintillatorPlane : public GeometryProperties {
+public:
+ScintillatorPlane();
+ScintillatorPlane(G4String name, double halfx, double halfy, double halfz, unsigned int numOfScintillators);
+ScintillatorPlane(G4String name, unsigned int numOfScintillators);
+ScintillatorPlane(G4String name, ScintillatorBunch *scintillatorBunch, unsigned int numOfBunches);
+ScintillatorPlane(G4String name, Scintillator *scintillator, unsigned int numOfScintillators);
 };
+
+class ScintillatorBunch : public GeometryProperties {
+public:
+ScintillatorBunch();
+ScintillatorBunch(G4String name, double halfx, double halfy, double halfz, unsigned int numOfScintillators, G4String material="G4_Galactic");
+ScintillatorBunch(G4String name, unsigned int numOfScintillators, G4String material="G4_Galactic");
+ScintillatorBunch(G4String name, Scintillator *scintillator, unsigned int numOfScintillators);
+};
+
 #endif

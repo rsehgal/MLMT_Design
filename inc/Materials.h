@@ -38,13 +38,17 @@ private:
   void CreateBoratedPolyethylene();
   void CreateHighDensityPolyethylene();
   void CreateScintillatorMaterial();
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
   void AttachScintillatorOpticalProperties(G4Material *material);
   void AttachAirOpticalProperties(G4Material *material);
+#endif
 
 public:
   static Materials *Instance();
+#ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
   G4SurfaceProperty *GetOpticalSurface(G4String surfaceName = G4String("Mirror"));
   G4SurfaceProperty *GetMirror(G4String mirrorName);
+#endif
   ~Materials();
   G4Material *GetBP() const;
   G4Material *GetHDPE() const;

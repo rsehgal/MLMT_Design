@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
     G4String command = "/control/execute ";
     G4String fileName = argv[1];
     G4String outFileName = fileName + ".root";
-    fp = new TFile(outFileName.c_str(), "RECREATE");
+    //fp = new TFile(outFileName.c_str(), "RECREATE");
     UImanager->ApplyCommand(command + fileName);
   } else {
     // interactive mode
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
   // Output::instance()->Close();
   // anal->Close();
   // delete anal;
-  fp->Close();
+  //fp->Close();
   delete visManager;
   delete runManager;
   // fp->Close();

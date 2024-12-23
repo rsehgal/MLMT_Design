@@ -16,28 +16,51 @@
 //#include "SD.h"
 #include <G4VUserDetectorConstruction.hh>
 #include <TFile.h>
+
+#include <G4AnalysisManager.hh>
+
 using namespace std;
 
 RunAction::RunAction() : G4UserRunAction() {}
 
 RunAction::~RunAction() {}
 
-G4Run *RunAction::GenerateRun() { return new Run; }
+G4Run *RunAction::GenerateRun()
+{
+  return new Run;
+}
 
-void RunAction::BeginOfRunAction(const G4Run *) {
+void RunAction::BeginOfRunAction(const G4Run *)
+{
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
   const DetectorConstruction *userDetectorConstruction =
       static_cast<const DetectorConstruction *>(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
   G4LogicalVolume *logicalWorld = userDetectorConstruction->GetLogicalWorld();
   std::cout << "@@@@@@@@@@@@@ Weight of Complete Detector @@@@@@@@@@@@" << std::endl;
-  //std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
+  // std::cout << GetLogicalVolumeWeight(logicalWorld) << std::endl;
   std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+
+  //Opening a ROOT file and creating a ROOT TTree using Ntuple
+  G4AnalysisManager *analMan = G4AnalysisManager::Instance();
+  analMan->OpenFile("out.root");
+  analMan->CreateNtuple("ftree", "A simple TTree");
+  analMan->CreateNtupleDColumn("channelNum");
+  analMan->CreateNtupleDColumn("tstamp");
+  analMan->FinishNtuple();
+  std::cout <<"RAMAN : Tree structure created..." << std::endl;
+  //TTree structure created
 }
 
-void RunAction::EndOfRunAction(const G4Run *run) {
+void RunAction::EndOfRunAction(const G4Run *run)
+{
   G4int nofEvents = run->GetNumberOfEvent();
-  if (nofEvents == 0)
-    return;
+  if (nofEvents == 0) return;
+  G4AnalysisManager *analMan = G4AnalysisManager::Instance();
+
+  //Writing and closing the ROOT File
+  analMan->Write();
+  analMan->CloseFile();
+  std::cout <<"SEHGAL : Closing the ROOT file........." << std::endl;
   /*PrintSummary("SensitiveHollowSpace",nofEvents);
   fOutFile->cd();
   Write();
