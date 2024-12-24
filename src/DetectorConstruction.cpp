@@ -63,6 +63,8 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   // G4LogicalVolume *scintillatorCrystalLogical = (new
   // Scintillator("ScintillatorCrystal",0.5*cm,0.5*cm,15*cm))->GetLogicalVolume();
 
+  /*
+  //whole thing is take in new class name **PlaneWithMask**
   double scintHalfx = 0.5 * cm;
   double scintHalfy = 0.5 * cm;
   double scintHalfz = 15 * cm;
@@ -85,9 +87,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
       new ScintillatorPlane("MaskingScintillatorPlane", maskingScintillator, 5);
   G4LogicalVolume *logicalMaskingPlane = maskingScintillatorPlane->GetLogicalVolume();
 
-  /*
-  G4LogicalVolume *logical = (new ScintillatorPlane("ScintillatorPlane",30))->GetLogicalVolume();
-  */
+  //
+  //G4LogicalVolume *logical = (new ScintillatorPlane("ScintillatorPlane",30))->GetLogicalVolume();
+  //
   std::vector<double> yPosVec     = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
   std::vector<double> yMaskPosVec = {-30. * cm + 1.5 * cm, -10 * cm + 1.5 * cm, 10 * cm + 1.5 * cm,
                                      30. * cm + 1.5 * cm};
@@ -101,7 +103,14 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     new G4PVPlacement(0, G4ThreeVector(0, yMaskPosVec[i], 0), logicalMaskingPlane, "PhysicalMaskingLayer", logicalWorld,
                       false, i, checkOverlaps);
   }
+  */
 
+  std::vector<double> yPosVec           = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
+  G4LogicalVolume *logicalPlaneWithMask = (new PlaneWithMask("ScintillatorPlaneWithMask", 100, 10))->GetLogicalVolume();
+  for (unsigned int i = 0; i < yPosVec.size(); i++) {
+    new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logicalPlaneWithMask, "PhysicalScintLayer", logicalWorld, false, i,
+                      checkOverlaps);
+  }
   /*
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);

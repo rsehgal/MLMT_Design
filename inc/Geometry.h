@@ -210,4 +210,12 @@ ScintillatorBunch(G4String name, unsigned int numOfScintillators, G4String mater
 ScintillatorBunch(G4String name, Scintillator *scintillator, unsigned int numOfScintillators);
 };
 
+class PlaneWithMask : public GeometryProperties{
+
+public:
+PlaneWithMask();
+~PlaneWithMask();
+
+PlaneWithMask(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
+};
 #endif
