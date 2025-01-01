@@ -218,4 +218,14 @@ PlaneWithMask();
 
 PlaneWithMask(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
 };
+
+class TomoLayer : public GeometryProperties{
+
+public:
+TomoLayer();
+~TomoLayer();
+
+TomoLayer(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
+};
+
 #endif

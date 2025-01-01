@@ -27,7 +27,7 @@
 #include <G4LogicalSkinSurface.hh>
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
-
+#include <G4RotationMatrix.hh>
 DetectorConstruction::DetectorConstruction()
 {
   fSDMan = G4SDManager::GetSDMpointer();
@@ -105,12 +105,25 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   }
   */
 
+/*
+ //This block is for on Plane with Masking Layer 
+ G4RotationMatrix *rotZ = new G4RotationMatrix();
+  rotZ->rotateZ(180.*deg);
   std::vector<double> yPosVec           = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
   G4LogicalVolume *logicalPlaneWithMask = (new PlaneWithMask("ScintillatorPlaneWithMask", 100, 10))->GetLogicalVolume();
   for (unsigned int i = 0; i < yPosVec.size(); i++) {
     new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logicalPlaneWithMask, "PhysicalScintLayer", logicalWorld, false, i,
                       checkOverlaps);
   }
+*/
+  std::vector<double> yPosVec           = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
+  G4LogicalVolume *logicalTomoLayer = (new TomoLayer("TomoLayer", 100, 10))->GetLogicalVolume();
+  for (unsigned int i = 0; i < yPosVec.size(); i++) {
+    new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logicalTomoLayer, "PhysicalTomoLayer", logicalWorld, false, i,
+                      checkOverlaps);
+  }
+
+
   /*
   SD *bpSD = new SD("BoratedPolyEthylene");
   fSDMan->AddNewDetector(bpSD);
