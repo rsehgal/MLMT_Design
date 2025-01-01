@@ -24,7 +24,7 @@ PlaneWithMask::PlaneWithMask(G4String name, unsigned int numOfScintillators, uns
 
   ScintillatorBunch *scintillatorBunch = new ScintillatorBunch("ScintillatorBunch", scintillator, numOfGroups);
 
-  ScintillatorPlane *scintillatorPlane = new ScintillatorPlane("ScintillatorPlane", scintillatorBunch, numOfGroups);
+  ScintillatorPlane *scintillatorPlane = new ScintillatorPlane("BunchScintillatorPlane", scintillatorBunch, numOfGroups);
   G4LogicalVolume *logical             = scintillatorPlane->GetLogicalVolume();
 
   G4Box *scintBunch      = static_cast<G4Box *>(scintillatorBunch->GetLogicalVolume()->GetSolid());
@@ -48,7 +48,7 @@ PlaneWithMask::PlaneWithMask(G4String name, unsigned int numOfScintillators, uns
 
   bool checkOverlaps = true;
   fLogicalVolume = (new Box(name,envelopHalfX,envelopHalfY,envelopHalfZ))->GetLogicalVolume();
-  new G4PVPlacement(0,G4ThreeVector(0,-1.*scintPlaneSolid->GetYHalfLength()+0.5,0),logical,"PhysicalScint",fLogicalVolume,false,0,checkOverlaps); 
+  new G4PVPlacement(0,G4ThreeVector(0,-1.*scintPlaneSolid->GetYHalfLength()+0.5,0),logical,"PhysicalBunch",fLogicalVolume,false,0,checkOverlaps); 
   new G4PVPlacement(0,G4ThreeVector(0,maskPlaneSolid->GetYHalfLength()+0.5,0),logicalMaskingPlane,"PhysicalMask",fLogicalVolume,false,0,checkOverlaps); 
 }
 

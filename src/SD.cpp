@@ -19,6 +19,8 @@ void SD::Initialize(G4HCofThisEvent *hitCollection) {}
 
 G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
 {
+  const G4StepPoint *preStepPoint = step->GetPreStepPoint();
+
   G4Track *track        = step->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
 
@@ -26,53 +28,58 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
   // std::endl;
 
   if (particleName == "mu-" || particleName == "mu+") {
-    std::cout << "--------------------------------------" << std::endl;
+    //std::cout << "--------------------------------------" << std::endl;
 
     std::string volName = track->GetTouchable()->GetVolume()->GetName();
 
     int layerNum          = -1000;
+    int subLayerNum       = -1000;
     std::string layerType = "";
     if (volName.find("Masking") != std::string::npos) {
-      layerNum  = track->GetTouchable()->GetVolume(1)->GetCopyNo();
-      layerType = "Masking";
+      layerNum    = track->GetTouchable()->GetVolume(3)->GetCopyNo();
+      subLayerNum = track->GetTouchable()->GetVolume(2)->GetCopyNo();
+      layerType   = "Masking";
     } else {
-      layerNum = track->GetTouchable()->GetVolume(2)->GetCopyNo();
+      layerNum    = track->GetTouchable()->GetVolume(4)->GetCopyNo();
+      subLayerNum = track->GetTouchable()->GetVolume(3)->GetCopyNo();
     }
 
     G4AnalysisManager *analMan = G4AnalysisManager::Instance();
 
-    unsigned short n = 5;
+    unsigned short n = 10;
 
     unsigned int stripNum = track->GetTouchable()->GetVolume()->GetCopyNo();
-    if (layerType == "Masking") {
-      unsigned int channelNum = layerNum * 2 * n + n + stripNum;
-      std::cout << RED << "Particle Name : " << particleName
-                << " : Layer Number : " << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
-                << " : Bunch Num : " << track->GetTouchable()->GetVolume(1)->GetCopyNo() << " :: strip no :" << stripNum
-                << " :: Name : " << track->GetTouchable()->GetVolume()->GetName() << " :: ChannelNum : " << channelNum
-                << RESET << std::endl;
+    if (preStepPoint->GetStepStatus() == fGeomBoundary) {
+      if (layerType == "Masking") {
+        unsigned int channelNum = layerNum * 4 * n + subLayerNum * 2 * n + n + stripNum;
+        std::cout << RED << "Particle Name : " << particleName
+                  << " : Layer Number : " << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
+                  << " : Bunch Num : " << stripNum << " :: Name : " << track->GetTouchable()->GetVolume()->GetName()
+                  << " :: ChannelNum : " << channelNum << RESET << std::endl;
 
-      // Filling the Ntuples
-      analMan->FillNtupleDColumn(0, 0, channelNum);
-      analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
-      analMan->AddNtupleRow(0);
+        // Filling the Ntuples
+        analMan->FillNtupleDColumn(0, 0, channelNum);
+        analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
+        analMan->AddNtupleRow(0);
 
-    } else {
-      unsigned int channelNum = layerNum * 2 * n + stripNum;
-      unsigned int maskNum    = track->GetTouchable()->GetVolume(1)->GetCopyNo();
+      } else {
+        unsigned int channelNum = layerNum * 4 * n + subLayerNum * 2 * n + stripNum;
+        unsigned int maskNum    = track->GetTouchable()->GetVolume(1)->GetCopyNo();
 
-      unsigned actualChannelNum = layerNum * n * n + maskNum * n + stripNum;
-      std::cout << "Particle Name : " << particleName
-                << " : Layer Number : " << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
-                << " : Bunch Num : " << maskNum     // track->GetTouchable()->GetVolume(1)->GetCopyNo()
-                << " :: strip no :" << stripNum << " :: Name : " << track->GetTouchable()->GetVolume()->GetName()
-                << " :: EncodedChannelNum : " << channelNum << " :: ActualChannelNum : " << actualChannelNum << RESET
-                << std::endl;
+        // unsigned actualChannelNum = layerNum * n * n + maskNum * n + stripNum;
+        unsigned actualChannelNum = layerNum * 2 * n * n + subLayerNum * n * n + maskNum * n + stripNum;
+        std::cout << "Particle Name : " << particleName << " : Layer Number : "
+                  << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
+                  //<< " : Bunch Num : " << maskNum     // track->GetTouchable()->GetVolume(1)->GetCopyNo()
+                  << " :: strip no :" << stripNum << " :: Name : " << track->GetTouchable()->GetVolume()->GetName()
+                  << " :: EncodedChannelNum : " << channelNum << " :: ActualChannelNum : " << actualChannelNum << RESET
+                  << std::endl;
 
-      // Filling the Ntuples
-      analMan->FillNtupleDColumn(0, 0, channelNum);
-      analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
-      analMan->AddNtupleRow(0);
+        // Filling the Ntuples
+        analMan->FillNtupleDColumn(0, 0, channelNum);
+        analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
+        analMan->AddNtupleRow(0);
+      }
     }
   }
   return true;
