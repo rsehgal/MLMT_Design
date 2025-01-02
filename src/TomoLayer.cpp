@@ -27,14 +27,19 @@ TomoLayer::TomoLayer(G4String name, unsigned int numOfScintillators, unsigned sh
   double envelopHalfX = solid->GetXHalfLength() + 0.5;
   double envelopHalfY = 2 * solid->GetYHalfLength() + 1;
   double envelopHalfZ = solid->GetZHalfLength() + 0.5;
+  double envelopHalfXZ = envelopHalfX > envelopHalfZ ? envelopHalfX : envelopHalfZ;
 
-  G4RotationMatrix *rotZ = new G4RotationMatrix();
-  rotZ->rotateZ(180. * deg);
+  std::cout << "AYUSH : XLength : " << (2*envelopHalfX) << std::endl; 
+  std::cout << "AYUSH : ZLength : " << (2*envelopHalfZ) << std::endl; 
+
+  G4RotationMatrix *rot = new G4RotationMatrix();
+  rot->rotateY(90. * deg);
+  rot->rotateZ(180. * deg);
 
   bool checkOverlaps = true;
-  fLogicalVolume     = (new Box(name, envelopHalfX, envelopHalfY, envelopHalfZ))->GetLogicalVolume();
+  fLogicalVolume     = (new Box(name, envelopHalfXZ, envelopHalfY, envelopHalfXZ))->GetLogicalVolume();
   new G4PVPlacement(0, G4ThreeVector(0, envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlane", fLogicalVolume, false,
                     0, checkOverlaps);
-  new G4PVPlacement(rotZ, G4ThreeVector(0, -1. * envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlane", fLogicalVolume,
+  new G4PVPlacement(rot, G4ThreeVector(0, -1. * envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlane", fLogicalVolume,
                     false, 1, checkOverlaps);
 }

@@ -51,6 +51,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
     unsigned int stripNum = track->GetTouchable()->GetVolume()->GetCopyNo();
     if (preStepPoint->GetStepStatus() == fGeomBoundary) {
       if (layerType == "Masking") {
+	return true;
         unsigned int channelNum = layerNum * 4 * n + subLayerNum * 2 * n + n + stripNum;
         std::cout << RED << "Particle Name : " << particleName
                   << " : Layer Number : " << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
