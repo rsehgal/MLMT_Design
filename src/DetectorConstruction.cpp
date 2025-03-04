@@ -48,9 +48,17 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   // World
   //
   G4bool checkOverlaps   = true;
-  G4double world_sizeXYZ = 200 * cm;
+  G4double world_sizeXYZ = 300 * cm;
+  G4double world_sizeX = 450 * cm;
+  G4double world_sizeY = 700 * cm;
+  G4double world_sizeZ = 850 * cm;
+
+  G4double cargo_sizeX = 260*cm;
+  G4double cargo_sizeY = 260*cm;
+  G4double cargo_sizeZ = 600*cm;
+ 
   logicalWorld =
-      (new Box("World", 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, 0.5 * world_sizeXYZ, "G4_AIR"))->GetLogicalVolume();
+      (new Box("World", 0.5 * world_sizeX, 0.5 * world_sizeY, 0.5 * world_sizeZ, "G4_AIR"))->GetLogicalVolume();
   G4VPhysicalVolume *physWorld = new G4PVPlacement(0,               // no rotation
                                                    G4ThreeVector(), // at (0,0,0)
                                                    logicalWorld,    // its logical volume
@@ -116,12 +124,69 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                       checkOverlaps);
   }
 */
+
+/*
+//This is just to create one 1m x 1m setup, Now can be done by instantiating class of SingleTelescope
   std::vector<double> yPosVec           = {-30. * cm, -10 * cm, 10 * cm, 30. * cm};
   G4LogicalVolume *logicalTomoLayer = (new TomoLayer("TomoLayer", 100, 10))->GetLogicalVolume();
   for (unsigned int i = 0; i < yPosVec.size(); i++) {
     new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logicalTomoLayer, "PhysicalTomoLayer", logicalWorld, false, i,
                       checkOverlaps);
   }
+*/
+
+G4LogicalVolume *logicalSingleTelescope = (new SingleTelescope("SingleTelescope", 100, 10))->GetLogicalVolume();
+//using tracker approach
+/*G4LogicalVolume *logicalTracker = (new Tracker("SingleTelescope", 100, 10))->GetLogicalVolume();
+G4Box *solid                 = static_cast<G4Box *>(logicalTracker->GetSolid());
+
+  double envelopHalfX = solid->GetXHalfLength() + 0.5;
+  double envelopHalfY = solid->GetYHalfLength() + 0.5;
+  double envelopHalfZ = solid->GetZHalfLength() + 0.5;
+  //double envelopHalfXZ = envelopHalfX > envelopHalfZ ? envelopHalfX : envelopHalfZ;
+  std::vector<double> yPosVec           = { -175 * cm, 175 * cm};
+
+unsigned short n = 3;
+unsigned short m = 1;
+int fullX = 2*envelopHalfX;
+int fullZ = 2*envelopHalfZ;
+
+//for(unsigned int yindex = 0 ; yindex < yPosVec.size() ; yindex++){
+
+
+  
+  for(unsigned int i = 0 ; i < n ; i++){
+
+
+	  for(unsigned int j = 0 ; j < m ; j++){
+
+		int zpos = (-1.*m*fullZ)/2.+(2*j+1)*envelopHalfZ+0.5;	
+		int xpos = (-1.*n*fullX)/2.+(2*i+1)*envelopHalfX+0.5;
+		new G4PVPlacement(0, G4ThreeVector(xpos, yPosVec[0]-envelopHalfY, zpos), logicalTracker, "PhysicalTracker", logicalWorld, false, 0,
+                      checkOverlaps);	
+
+		new G4PVPlacement(0, G4ThreeVector(xpos, yPosVec[1]+envelopHalfY, zpos), logicalTracker, "PhysicalTracker", logicalWorld, false, 0,
+                      checkOverlaps);	
+
+
+	}
+}
+*/
+#ifdef USE_CARGO
+//Creating Cargo
+G4LogicalVolume *logicalCargo =
+      (new Box("Cargo", 0.5 * cargo_sizeX, 0.5 * cargo_sizeY, 0.5 * cargo_sizeZ, "G4_Fe"))->GetLogicalVolume();
+
+
+//Placing the cargo
+new G4PVPlacement(0, G4ThreeVector(0, 0, 0*cm), logicalCargo, "PhysicalCargo", logicalWorld, false, 0,
+                      checkOverlaps);
+#endif
+
+//}
+new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicalSingleTelescope, "PhysicalSingleTelescope", logicalWorld, false, 0,
+                      checkOverlaps);
+
 
 
   /*

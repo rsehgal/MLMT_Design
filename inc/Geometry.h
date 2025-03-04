@@ -227,5 +227,22 @@ TomoLayer();
 
 TomoLayer(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
 };
+class Tracker : public GeometryProperties{
+
+public:
+Tracker();
+~Tracker();
+
+Tracker(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
+};
+
+class SingleTelescope : public GeometryProperties{
+
+public:
+SingleTelescope();
+~SingleTelescope();
+
+SingleTelescope(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups);
+};
 
 #endif

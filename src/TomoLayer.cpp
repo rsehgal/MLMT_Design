@@ -38,8 +38,8 @@ TomoLayer::TomoLayer(G4String name, unsigned int numOfScintillators, unsigned sh
 
   bool checkOverlaps = true;
   fLogicalVolume     = (new Box(name, envelopHalfXZ, envelopHalfY, envelopHalfXZ))->GetLogicalVolume();
-  new G4PVPlacement(0, G4ThreeVector(0, envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlane", fLogicalVolume, false,
+  new G4PVPlacement(0, G4ThreeVector(0, -1.* envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlaneWithMask_X", fLogicalVolume, false,
                     0, checkOverlaps);
-  new G4PVPlacement(rot, G4ThreeVector(0, -1. * envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlane", fLogicalVolume,
+  new G4PVPlacement(rot, G4ThreeVector(0, envelopHalfY / 2. + 0.5, 0), logical, "PhysicalPlaneWithMask_Y", fLogicalVolume,
                     false, 1, checkOverlaps);
 }
