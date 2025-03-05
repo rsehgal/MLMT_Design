@@ -18,6 +18,7 @@ class TFile;
 class RunAction : public G4UserRunAction {
 
   TFile *fOutFile;
+  unsigned long long fGlobalRunningTime;
 
 public:
   RunAction();

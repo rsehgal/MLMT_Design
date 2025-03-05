@@ -11,7 +11,7 @@
 #include "G4PVPlacement.hh"
 #include <G4RotationMatrix.hh>
 #include <G4SystemOfUnits.hh>
-
+#include "Global.h"
 SingleTelescope::SingleTelescope() {}
 
 SingleTelescope::~SingleTelescope() {}
@@ -19,7 +19,7 @@ SingleTelescope::~SingleTelescope() {}
 SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups)
 {
 
-  std::vector<double> yPosVec           = {-80. * cm, -50 * cm, 50 * cm, 80. * cm};
+  //std::vector<double> yPosVec           = {-80. * cm, -50 * cm, 50 * cm, 80. * cm};
   //std::vector<double> yPosVec           = {-275. * cm, -175 * cm, 175 * cm, 275. * cm};
   //std::vector<double> yPosVec           = {0. * cm};
   G4LogicalVolume *logicalTomoLayer = (new TomoLayer("TomoLayer", 100, 10))->GetLogicalVolume();

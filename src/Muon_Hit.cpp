@@ -10,8 +10,8 @@
 
 Muon_Hit::Muon_Hit() : fLayerNum(-1), fPlaneNum(-1), fStripNum(-1), fMaskNum(-1) {}
 
-Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, int maskNum)
-    : fLayerNum(layerNum), fPlaneNum(planeNum), fStripNum(stripNum), fMaskNum(maskNum)
+Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, int maskNum, unsigned long long tme)
+    : fLayerNum(layerNum), fPlaneNum(planeNum), fStripNum(stripNum), fMaskNum(maskNum), fTime(tme)
 {
 }
 
@@ -24,7 +24,7 @@ void Muon_Hit::Print()
   else
     std::cout << BLUE;
   std::cout << "LayerNum : " << fLayerNum << " : PlaneNum : " << fPlaneNum << " : StripNum : " << fStripNum << " : StripCenter : " << GetStripCenter()
-            << " : ChannelNum : " << GetChannelNum() << " : MaskNum : " << fMaskNum << RESET << std::endl;
+            << " : ChannelNum : " << GetChannelNum() << " : MaskNum : " << fMaskNum << " : Timestamp : " << fTime << RESET << std::endl;
 }
 
 int Muon_Hit::GetChannelNum(int n)

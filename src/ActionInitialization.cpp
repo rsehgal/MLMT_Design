@@ -8,6 +8,7 @@
 #include "RunAction.h"
 #include <iostream>
 #include "EventAction.h"
+#include "TrackingAction.h"
 //#include "B1SteppingAction.hh"
 
 ActionInitialization::ActionInitialization() : G4VUserActionInitialization() {}
@@ -22,6 +23,7 @@ void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
   SetUserAction(new RunAction);
   SetUserAction(new EventAction);
+  SetUserAction(new TrackingAction);
 
   //  B1EventAction* eventAction = new B1EventAction;
   //  SetUserAction(eventAction);

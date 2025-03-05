@@ -14,19 +14,20 @@
 #include "Muon_Hit.h"
 #include "Scint_Hit.h"
 #include "HitCollections.h"
-SD::SD(const G4String detName) : G4VSensitiveDetector(detName) {
-}
+SD::SD(const G4String detName) : G4VSensitiveDetector(detName) {}
 
-SD::SD(const G4String detName, G4String collName) : G4VSensitiveDetector(detName) {
-collectionName.insert(collName);
+SD::SD(const G4String detName, G4String collName) : G4VSensitiveDetector(detName)
+{
+  collectionName.insert(collName);
 }
 
 SD::~SD() {}
 
-void SD::Initialize(G4HCofThisEvent *hitCollection) {
- G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
- fMuonHitCollection = new MuonHitCollection(SensitiveDetectorName,collectionName[0]);
- hitCollection->AddHitsCollection(hcID,fMuonHitCollection);
+void SD::Initialize(G4HCofThisEvent *hitCollection)
+{
+  G4int hcID         = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+  fMuonHitCollection = new MuonHitCollection(SensitiveDetectorName, collectionName[0]);
+  hitCollection->AddHitsCollection(hcID, fMuonHitCollection);
 }
 
 G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
@@ -52,6 +53,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
     int channelNum        = -1000;
     int maskNum           = -1000;
     int stripNum          = -1000;
+    unsigned long long  tme         = 0;
     std::string layerType = "";
     if (volName.find("Masking") != std::string::npos) {
       layerNum    = track->GetTouchable()->GetVolume(3)->GetCopyNo();
@@ -68,6 +70,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
 
     // unsigned int
     stripNum = track->GetTouchable()->GetVolume()->GetCopyNo();
+    tme = track->GetGlobalTime();
     if (preStepPoint->GetStepStatus() == fGeomBoundary) {
       if (layerType == "Masking") {
         // return true;
@@ -106,9 +109,9 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
         analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
         analMan->AddNtupleRow(0);
       }
-      //Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
-      //fMuonHitCollection->insert(hit);
-      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum));
+      // Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
+      // fMuonHitCollection->insert(hit);
+      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum,tme ));
       /*hit->Print();
       delete hit;*/
     }

@@ -6,6 +6,8 @@
 #ifndef Global_h
 #define Global_h
 
+#include <vector>
+
 extern double gPlaneSizeX;
 extern double gPlaneSizeZ;
 extern double gPlaneSize;
@@ -14,4 +16,5 @@ extern int gNumOfStripsX;
 extern int gNumOfStripsZ;
 
 extern int gNumOfMasks;
+extern std::vector<double> yPosVec;
 #endif

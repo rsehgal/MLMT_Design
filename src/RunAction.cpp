@@ -21,7 +21,9 @@
 
 using namespace std;
 
-RunAction::RunAction() : G4UserRunAction() {}
+RunAction::RunAction() : G4UserRunAction() {
+fGlobalRunningTime = 0;
+}
 
 RunAction::~RunAction() {}
 
@@ -47,6 +49,19 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("channelNum");
   analMan->CreateNtupleDColumn("tstamp");
   analMan->FinishNtuple();
+
+  analMan->CreateNtuple("MuonHits", "A MuonHit TTree");
+  analMan->CreateNtupleDColumn("layerNum");
+  analMan->CreateNtupleDColumn("planeNum");
+  analMan->CreateNtupleDColumn("stripNum");
+  analMan->CreateNtupleDColumn("maskNum");
+  analMan->CreateNtupleDColumn("channelNum");
+  analMan->CreateNtupleDColumn("x");
+  analMan->CreateNtupleDColumn("y");
+  analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("eventNum");
+  analMan->FinishNtuple();
+
   std::cout <<"RAMAN : Tree structure created..." << std::endl;
   //TTree structure created
 }

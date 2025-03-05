@@ -13,3 +13,4 @@ int gNumOfStripsX = 100;
 int gNumOfStripsZ = 100;
 
 int gNumOfMasks = 10;
+std::vector<double> yPosVec = {-80. * cm, -20 * cm, 20 * cm, 80. * cm};
