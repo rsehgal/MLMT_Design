@@ -13,11 +13,21 @@
 #include <G4AnalysisManager.hh>
 #include "Muon_Hit.h"
 #include "Scint_Hit.h"
-SD::SD(const G4String detName) : G4VSensitiveDetector(detName) {}
+#include "HitCollections.h"
+SD::SD(const G4String detName) : G4VSensitiveDetector(detName) {
+}
+
+SD::SD(const G4String detName, G4String collName) : G4VSensitiveDetector(detName) {
+collectionName.insert(collName);
+}
 
 SD::~SD() {}
 
-void SD::Initialize(G4HCofThisEvent *hitCollection) {}
+void SD::Initialize(G4HCofThisEvent *hitCollection) {
+ G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+ fMuonHitCollection = new MuonHitCollection(SensitiveDetectorName,collectionName[0]);
+ hitCollection->AddHitsCollection(hcID,fMuonHitCollection);
+}
 
 G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
 {
@@ -96,9 +106,11 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
         analMan->FillNtupleDColumn(0, 1, track->GetGlobalTime());
         analMan->AddNtupleRow(0);
       }
-      Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
-      hit->Print();
-      delete hit;
+      //Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
+      //fMuonHitCollection->insert(hit);
+      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum));
+      /*hit->Print();
+      delete hit;*/
     }
   }
   return true;

@@ -7,7 +7,7 @@
 #include "PrimaryGeneratorAction.h"
 #include "RunAction.h"
 #include <iostream>
-//#include "B1EventAction.hh"
+#include "EventAction.h"
 //#include "B1SteppingAction.hh"
 
 ActionInitialization::ActionInitialization() : G4VUserActionInitialization() {}
@@ -21,6 +21,7 @@ void ActionInitialization::BuildForMaster() const {
 void ActionInitialization::Build() const {
   SetUserAction(new PrimaryGeneratorAction);
   SetUserAction(new RunAction);
+  SetUserAction(new EventAction);
 
   //  B1EventAction* eventAction = new B1EventAction;
   //  SetUserAction(eventAction);

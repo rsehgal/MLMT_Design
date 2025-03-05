@@ -6,9 +6,9 @@
 #ifndef HitCollections_h
 #define HitCollections_h
 
-#include "G4THitCollection.hh"
+#include "G4THitsCollection.hh"
 #include "Scint_Hit.h"
-
-using ScintHitCollection = G4THitCollection<Scint_Hit_h>;
-
+#include "Muon_Hit.h"
+using ScintHitCollection = G4THitsCollection<Scint_Hit>;
+using MuonHitCollection = G4THitsCollection<Muon_Hit>;
 #endif

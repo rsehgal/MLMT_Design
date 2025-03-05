@@ -26,7 +26,7 @@ Scintillator::Scintillator(G4String name, double halfx, double halfy, double hal
 #endif
 
   G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
-  SD *scintSD         = new SD(name+"_SD");
+  SD *scintSD         = new SD(name+"_SD",name+"_MuonHits");
   fSDMan->AddNewDetector(scintSD);
   fLogicalVolume->SetSensitiveDetector(scintSD);
 

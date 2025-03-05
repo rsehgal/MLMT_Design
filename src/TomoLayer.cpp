@@ -33,7 +33,7 @@ TomoLayer::TomoLayer(G4String name, unsigned int numOfScintillators, unsigned sh
   std::cout << "AYUSH : ZLength : " << (2*envelopHalfZ) << std::endl; 
 
   G4RotationMatrix *rot = new G4RotationMatrix();
-  rot->rotateY(90. * deg);
+  rot->rotateY(-90. * deg);
   rot->rotateZ(180. * deg);
 
   bool checkOverlaps = true;
