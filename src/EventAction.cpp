@@ -40,11 +40,12 @@ void EventAction::EndOfEventAction(const G4Event *event)
   G4int maskHCID = G4SDManager::GetSDMpointer()->GetCollectionID("MaskingScintillatorCrystal_MuonHits");
   MuonHitCollection *muonHitcollectionMask = static_cast<MuonHitCollection *>(hce->GetHC(maskHCID));
 
-  std::cout << "======================================" << std::endl;
-  std::cout << "Strip Hit collection size : " << muonHitCollStripSize << std::endl;
+  //std::cout << "======================================" << std::endl;
+  //std::cout << "Strip Hit collection size : " << muonHitCollStripSize << std::endl;
   for (unsigned int i = 0; i < muonHitCollectionStrip->entries(); i++) {
     Muon_Hit *hitStrip = (*muonHitCollectionStrip)[i];
-    hitStrip->Print();
+    //Uncomment the below line to see the hit points
+    //hitStrip->Print();
     analMan->FillNtupleDColumn(1, 0, hitStrip->fLayerNum);
     analMan->FillNtupleDColumn(1, 1, hitStrip->fPlaneNum);
     analMan->FillNtupleDColumn(1, 2, hitStrip->fStripNum);
@@ -62,7 +63,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
     analMan->AddNtupleRow(1);
   }
 
-  std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
+  //std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
 
   /*for(int i = hitPointVec.size()-1; i >= 0 ; i--){
   std::cout << "RAMAN : " << hitPointVec[i] << std::endl;
@@ -86,10 +87,10 @@ void EventAction::EndOfEventAction(const G4Event *event)
       analMan->AddNtupleRow(2);
     }
   }
-  std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
+ /* std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
   std::cout << "Masking Hit collection size : " << muonHitcollectionMask->entries() << std::endl;
   for (unsigned int i = 0; i < muonHitcollectionMask->entries(); i++) {
     Muon_Hit *hitMask = (*muonHitcollectionMask)[i];
     hitMask->Print();
-  }
+  }*/
 }

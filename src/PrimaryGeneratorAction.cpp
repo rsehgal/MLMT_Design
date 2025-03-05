@@ -16,7 +16,8 @@
 #include <G4ParticleGun.hh>
 //#include "RadioactiveSource.h"
 #include <G4Geantino.hh>
-
+#include "CLHEP/Random/RandFlat.h"
+#include "Global.h"
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
   // Default place holders
   fParticleGun = new G4ParticleGun(1);
@@ -51,5 +52,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
     fParticleGun->SetParticleDefinition(ion);
     fParticleGun->SetParticleCharge(charge);
   }
+
+  double randX1 = CLHEP::RandFlat::shoot(-500.,500.);
+  double randZ1 = CLHEP::RandFlat::shoot(-500.,500.);
+  double randX2 = CLHEP::RandFlat::shoot(-500.,500.);
+  double randZ2 = CLHEP::RandFlat::shoot(-500.,500.);
+
+  G4ThreeVector startPoint(randX1,yPosVec[3]+100,randZ1);
+  G4ThreeVector endPoint(randX2,yPosVec[0]+100,randZ2);
+
+  G4ThreeVector dir = endPoint-startPoint;
+  G4ThreeVector unitDir = dir.unit();
+
+  fParticleGun->SetParticlePosition(startPoint);
+  fParticleGun->SetParticleMomentumDirection(unitDir);
+
   fParticleGun->GeneratePrimaryVertex(event);
 }
