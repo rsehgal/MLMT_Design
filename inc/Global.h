@@ -7,6 +7,8 @@
 #define Global_h
 
 #include <vector>
+#include <map>
+#include <G4ThreeVector.hh>
 
 extern double gPlaneSizeX;
 extern double gPlaneSizeZ;
@@ -17,4 +19,8 @@ extern int gNumOfStripsZ;
 
 extern int gNumOfMasks;
 extern std::vector<double> yPosVec;
+extern std::map<int,G4ThreeVector> hitPointVec;
+
+
+extern void InitializeHitPointVec();
 #endif

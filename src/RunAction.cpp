@@ -62,6 +62,15 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 
+
+  analMan->CreateNtuple("ReconsMuonHits", "A Reconstructed MuonHit TTree");
+  analMan->CreateNtupleDColumn("layerNum");
+  analMan->CreateNtupleDColumn("x");
+  analMan->CreateNtupleDColumn("y");
+  analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("eventNum");
+  analMan->FinishNtuple();
+
   std::cout <<"RAMAN : Tree structure created..." << std::endl;
   //TTree structure created
 }
