@@ -58,8 +58,18 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   double randX2 = CLHEP::RandFlat::shoot(-500.,500.);
   double randZ2 = CLHEP::RandFlat::shoot(-500.,500.);
 
+  //Used for unidirection muon beam
+  //G4ThreeVector startPoint(0.,yPosVec[3]+100,0.);
+
   G4ThreeVector startPoint(randX1,yPosVec[3]+100,randZ1);
-  G4ThreeVector endPoint(randX2,yPosVec[0]+100,randZ2);
+  G4ThreeVector endPoint = startPoint; //(-50000,-50000,-50000);
+  endPoint.setY(yPosVec[0]-100);
+#define RANDOM_DIRECTION
+#ifdef RANDOM_DIRECTION
+  endPoint.set(randX2,yPosVec[0]-100,randZ2);
+#endif
+
+  //G4ThreeVector endPoint(randX2,yPosVec[0]-100,randZ2);
 
   G4ThreeVector dir = endPoint-startPoint;
   G4ThreeVector unitDir = dir.unit();

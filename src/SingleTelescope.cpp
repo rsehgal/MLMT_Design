@@ -40,5 +40,8 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
                       checkOverlaps);
   }
 
-
+  G4LogicalVolume *logicalScatterer     = (new Box("Scatterer", 10*cm, 10*cm, 10*cm, "G4_Pb"))->GetLogicalVolume();
+  new G4PVPlacement(0, G4ThreeVector(0,0.,0), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+                      checkOverlaps);
+  
 }

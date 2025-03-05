@@ -25,7 +25,7 @@ PlaneWithMask::PlaneWithMask(G4String name, unsigned int numOfScintillators, uns
   //of all the gaps, which in this case comes out to be 112.4 cm.
   double scintHalfz = 56.2 * cm;
 
-  Scintillator *scintillator = new Scintillator("ScintillatorCrystal", scintHalfx, scintHalfy, scintHalfz,"G4_Pb");
+  Scintillator *scintillator = new Scintillator("ScintillatorCrystal", scintHalfx, scintHalfy, scintHalfz,"G4_Galactic");
 
   ScintillatorBunch *scintillatorBunch = new ScintillatorBunch("ScintillatorBunch", scintillator, numOfGroups);
 
@@ -38,7 +38,7 @@ PlaneWithMask::PlaneWithMask(G4String name, unsigned int numOfScintillators, uns
   double scintBunchHalfz = scintBunch->GetZHalfLength();
 
   Scintillator *maskingScintillator =
-      new Scintillator("MaskingScintillatorCrystal", scintBunchHalfx, scintBunchHalfy, scintBunchHalfz,"G4_Cu");
+      new Scintillator("MaskingScintillatorCrystal", scintBunchHalfx, scintBunchHalfy, scintBunchHalfz,"G4_Galactic");
   ScintillatorPlane *maskingScintillatorPlane =
       new ScintillatorPlane("MaskingScintillatorPlane", maskingScintillator, numOfGroups);
   G4LogicalVolume *logicalMaskingPlane = maskingScintillatorPlane->GetLogicalVolume();
