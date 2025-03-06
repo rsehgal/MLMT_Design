@@ -28,6 +28,7 @@ public:
   G4ThreeVector GetDirCosine() const;
 
   void Print();
+  void Reset();
   ~Track();
 };
 #endif

@@ -8,7 +8,10 @@
 
 #include "G4UserEventAction.hh"
 #include "G4Event.hh"
+#include "Track.h"
 class EventAction : public G4UserEventAction {
+  Track fIncomingTrack;
+  Track fOutgoingTrack;
 
 public:
   EventAction();

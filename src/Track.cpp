@@ -7,11 +7,15 @@
 #include "Track.h"
 //#include "Point3D.h"
 
-Track::Track() {}
+Track::Track()
+{
+  fP1 = G4ThreeVector();
+  fP2 = G4ThreeVector();
+}
 
 Track::~Track() {}
 
-Track::Track(G4ThreeVector p, G4ThreeVector q) 
+Track::Track(G4ThreeVector p, G4ThreeVector q)
 {
   fP1 = p;
   fP2 = q;
@@ -43,11 +47,13 @@ G4ThreeVector Track::GetP2() const
 void Track::SetP1(G4ThreeVector p)
 {
   fP1 = p;
+  CalculateDirCosine();
 }
 
 void Track::SetP2(G4ThreeVector p)
 {
   fP2 = p;
+  CalculateDirCosine();
 }
 
 double Track::Angle(Track tr)
@@ -64,6 +70,10 @@ double Track::GetZenithAngle()
   return this->Angle(ref);
 }
 
+void Track::Reset(){
+ fP1.set(0.,0.,0);
+ fP2.set(0.,0.,0);
+}
 void Track::Print()
 {
   std::cout << fP1 << " : " << fP2 << std::endl;

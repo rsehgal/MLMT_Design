@@ -16,7 +16,8 @@
 #include "colors.h"
 #include "G4AnalysisManager.hh"
 #include "Global.h"
-
+#include "Helpers.h"
+#include <cmath>
 EventAction::EventAction() {}
 
 EventAction::~EventAction() {}
@@ -40,12 +41,12 @@ void EventAction::EndOfEventAction(const G4Event *event)
   G4int maskHCID = G4SDManager::GetSDMpointer()->GetCollectionID("MaskingScintillatorCrystal_MuonHits");
   MuonHitCollection *muonHitcollectionMask = static_cast<MuonHitCollection *>(hce->GetHC(maskHCID));
 
-  //std::cout << "======================================" << std::endl;
-  //std::cout << "Strip Hit collection size : " << muonHitCollStripSize << std::endl;
+  // std::cout << "======================================" << std::endl;
+  // std::cout << "Strip Hit collection size : " << muonHitCollStripSize << std::endl;
   for (unsigned int i = 0; i < muonHitCollectionStrip->entries(); i++) {
     Muon_Hit *hitStrip = (*muonHitCollectionStrip)[i];
-    //Uncomment the below line to see the hit points
-    //hitStrip->Print();
+    // Uncomment the below line to see the hit points
+    // hitStrip->Print();
     analMan->FillNtupleDColumn(1, 0, hitStrip->fLayerNum);
     analMan->FillNtupleDColumn(1, 1, hitStrip->fPlaneNum);
     analMan->FillNtupleDColumn(1, 2, hitStrip->fStripNum);
@@ -63,7 +64,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
     analMan->AddNtupleRow(1);
   }
 
-  //std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
+  // std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
 
   /*for(int i = hitPointVec.size()-1; i >= 0 ; i--){
   std::cout << "RAMAN : " << hitPointVec[i] << std::endl;
@@ -72,12 +73,16 @@ void EventAction::EndOfEventAction(const G4Event *event)
   bool hitInAllLayers = true;
 
   for (int i = hitPointVec.size() - 1; i >= 0; i--) {
-	hitInAllLayers &= hitPointVec[i].x() > -50000.;
-	hitInAllLayers &= hitPointVec[i].y() > -50000.;
-	hitInAllLayers &= hitPointVec[i].z() > -50000.;
+    hitInAllLayers &= hitPointVec[i].x() > -50000.;
+    hitInAllLayers &= hitPointVec[i].y() > -50000.;
+    hitInAllLayers &= hitPointVec[i].z() > -50000.;
   }
 
   if (hitInAllLayers) {
+    // Resetting previously set tracks
+    fIncomingTrack.Reset();
+    fOutgoingTrack.Reset();
+
     for (int i = hitPointVec.size() - 1; i >= 0; i--) {
       analMan->FillNtupleDColumn(2, 0, i);
       analMan->FillNtupleDColumn(2, 1, hitPointVec[i].x());
@@ -86,11 +91,36 @@ void EventAction::EndOfEventAction(const G4Event *event)
       analMan->FillNtupleDColumn(2, 4, event->GetEventID());
       analMan->AddNtupleRow(2);
     }
+
+    // Hardcoded for incoming and outgoing track of size 2
+    fIncomingTrack.SetP1(hitPointVec[5]);
+    fIncomingTrack.SetP2(hitPointVec[4]);
+    fOutgoingTrack.SetP1(hitPointVec[3]);
+    fOutgoingTrack.SetP2(hitPointVec[2]);
+
+    /*std::cout << "--------------------------------------" << std::endl;
+    fIncomingTrack.Print();
+    fOutgoingTrack.Print();*/
+    double dev = fIncomingTrack.Angle(fOutgoingTrack);
+    //if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01) 
+     {
+      G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
+      // std::cout << "POCA : " << poca << std::endl;
+
+      if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z())) {
+        analMan->FillNtupleDColumn(3, 0, poca.x());
+        analMan->FillNtupleDColumn(3, 1, poca.y());
+        analMan->FillNtupleDColumn(3, 2, poca.z());
+        analMan->FillNtupleDColumn(3, 3, dev);
+        analMan->FillNtupleDColumn(3, 4, event->GetEventID());
+        analMan->AddNtupleRow(3);
+      }
+    }
   }
- /* std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
-  std::cout << "Masking Hit collection size : " << muonHitcollectionMask->entries() << std::endl;
-  for (unsigned int i = 0; i < muonHitcollectionMask->entries(); i++) {
-    Muon_Hit *hitMask = (*muonHitcollectionMask)[i];
-    hitMask->Print();
-  }*/
+  /* std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
+   std::cout << "Masking Hit collection size : " << muonHitcollectionMask->entries() << std::endl;
+   for (unsigned int i = 0; i < muonHitcollectionMask->entries(); i++) {
+     Muon_Hit *hitMask = (*muonHitcollectionMask)[i];
+     hitMask->Print();
+   }*/
 }

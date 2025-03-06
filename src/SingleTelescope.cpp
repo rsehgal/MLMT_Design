@@ -41,10 +41,22 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
                       i, checkOverlaps);
   }
 
+  //Scatterer under test
   G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
-  new G4PVPlacement(0, G4ThreeVector(0, 0., 0), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+  new G4PVPlacement(0, G4ThreeVector(0, 0., 20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+                    checkOverlaps);
+  new G4PVPlacement(0, G4ThreeVector(20*cm, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 1,
+                    checkOverlaps);
+  new G4PVPlacement(0, G4ThreeVector(-20*cm, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 2,
+                    checkOverlaps);  new G4PVPlacement(0, G4ThreeVector(0., 0., -20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 3,
                     checkOverlaps);
 
+
+
+
+
+
+  //For momentum estimation
   G4LogicalVolume *logicalMomentumScatterer =
       (new Box("MomentumDetectionScattererSlab", 50 * cm, 10 * cm, 50 * cm, "G4_Pb"))->GetLogicalVolume();
   new G4PVPlacement(0, G4ThreeVector(0, -95. * cm, 0), logicalMomentumScatterer, "PhysicalMomentumScatterer",

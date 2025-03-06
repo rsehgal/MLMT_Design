@@ -45,11 +45,14 @@ void RunAction::BeginOfRunAction(const G4Run *)
   //Opening a ROOT file and creating a ROOT TTree using Ntuple
   G4AnalysisManager *analMan = G4AnalysisManager::Instance();
   analMan->OpenFile("out.root");
+
+  //Tree ID 0
   analMan->CreateNtuple("ftree", "A simple TTree");
   analMan->CreateNtupleDColumn("channelNum");
   analMan->CreateNtupleDColumn("tstamp");
   analMan->FinishNtuple();
 
+  //Tree ID 1 
   analMan->CreateNtuple("MuonHits", "A MuonHit TTree");
   analMan->CreateNtupleDColumn("layerNum");
   analMan->CreateNtupleDColumn("planeNum");
@@ -62,12 +65,21 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 
-
+  //Tree ID 2
   analMan->CreateNtuple("ReconsMuonHits", "A Reconstructed MuonHit TTree");
   analMan->CreateNtupleDColumn("layerNum");
   analMan->CreateNtupleDColumn("x");
   analMan->CreateNtupleDColumn("y");
   analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("eventNum");
+  analMan->FinishNtuple();
+
+  //Tree ID 3
+  analMan->CreateNtuple("pocaTree", "A reconstructed PoCA points TTree");
+  analMan->CreateNtupleDColumn("x");
+  analMan->CreateNtupleDColumn("y");
+  analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("dev");
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 

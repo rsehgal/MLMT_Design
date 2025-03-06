@@ -60,13 +60,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
   //Used for unidirection muon beam
   //G4ThreeVector startPoint(0.,yPosVec[3]+100,0.);
-
-  G4ThreeVector startPoint(randX1,yPosVec[3]+100,randZ1);
+  double ypos = 150*cm;
+  //G4ThreeVector startPoint(randX1,yPosVec[3]+100,randZ1);
+  G4ThreeVector startPoint(randX1,ypos,randZ1);
   G4ThreeVector endPoint = startPoint; //(-50000,-50000,-50000);
-  endPoint.setY(yPosVec[0]-100);
+  //endPoint.setY(yPosVec[0]-100);
+  endPoint.setY(-1.*ypos);
 #define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
-  endPoint.set(randX2,yPosVec[0]-100,randZ2);
+  //endPoint.set(randX2,yPosVec[0]-100,randZ2);
+  endPoint.set(randX2,-1.*ypos,randZ2);
 #endif
 
   //G4ThreeVector endPoint(randX2,yPosVec[0]-100,randZ2);

@@ -28,9 +28,9 @@ Vec_t POCA(Vec_t p, Vec_t u, Vec_t q, Vec_t v, Vec_t &p1, Vec_t &q1)
 	Precision c = (-uDotv * uDotv + vMag2 * uMag2);
 	Precision d = (-vMag2 * b) / (uDotv * c);
 	s = a + d;
-	// std::cout<<"B1 : "<<b1<<" : B2 : "<<b2<<std::endl;
-	// std::cout<<"A : "<<a<<" : B : "<<b<<" : C : "<<c<<" : D : "<<d<<std::endl;
-	// std::cout<<"S : "<<s<<std::endl;
+	//std::cout<<"B1 : "<<b1<<" : B2 : "<<b2<<std::endl;
+	//std::cout<<"A : "<<a<<" : B : "<<b<<" : C : "<<c<<" : D : "<<d<<std::endl;
+	//std::cout<<"S : "<<s<<std::endl;
 
 	double numer = (uDotv * (pDotu - qDotu) - uMag2 * (pDotv - qDotv));
 	double deno = (uDotv * uDotv - uMag2 * vMag2);
