@@ -13,7 +13,7 @@ int gNumOfStripsX = 100;
 int gNumOfStripsZ = 100;
 
 int gNumOfMasks = 10;
-std::vector<double> yPosVec = {-130 * cm, -100 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
 
 std::map<int, G4ThreeVector> hitPointVec;
 

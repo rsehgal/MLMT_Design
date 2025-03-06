@@ -47,6 +47,6 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
 
   G4LogicalVolume *logicalMomentumScatterer =
       (new Box("MomentumDetectionScattererSlab", 50 * cm, 10 * cm, 50 * cm, "G4_Pb"))->GetLogicalVolume();
-  new G4PVPlacement(0, G4ThreeVector(0, -115. * cm, 0), logicalMomentumScatterer, "PhysicalMomentumScatterer",
+  new G4PVPlacement(0, G4ThreeVector(0, -95. * cm, 0), logicalMomentumScatterer, "PhysicalMomentumScatterer",
                     fLogicalVolume, false, 0, checkOverlaps);
 }
