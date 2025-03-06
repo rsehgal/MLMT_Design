@@ -96,6 +96,9 @@ else()
 target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 endif()
 
+add_executable(Test_Track core/Test_Track.cpp ${PROJECT_SOURCE_DIR}/src/Track.cpp ${PROJECT_SOURCE_DIR}/src/Helpers.cpp)
+target_link_libraries(Test_Track ${Geant4_LIBRARIES})
+
 #add_executable(TestBoolean coreTest/TestBoolean.cpp)
 #target_link_libraries(TestBoolean ${Geant4_LIBRARIES})
 #
