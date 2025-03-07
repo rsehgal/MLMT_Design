@@ -10,8 +10,8 @@
 
 Muon_Hit::Muon_Hit() : fLayerNum(-1), fPlaneNum(-1), fStripNum(-1), fMaskNum(-1) {}
 
-Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, int maskNum, unsigned long long tme)
-    : fLayerNum(layerNum), fPlaneNum(planeNum), fStripNum(stripNum), fMaskNum(maskNum), fTime(tme)
+Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momentum, int maskNum, unsigned long long tme)
+    : fLayerNum(layerNum), fPlaneNum(planeNum), fStripNum(stripNum), fMomentum(momentum), fMaskNum(maskNum), fTime(tme)
 {
 }
 

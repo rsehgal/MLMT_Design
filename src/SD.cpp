@@ -58,7 +58,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
     if (volName.find("Masking") != std::string::npos) {
       layerNum    = track->GetTouchable()->GetVolume(3)->GetCopyNo();
       subLayerNum = track->GetTouchable()->GetVolume(2)->GetCopyNo();
-      layerType   = "Masking";
+      layerType   = "Masking";;;
     } else {
       layerNum    = track->GetTouchable()->GetVolume(4)->GetCopyNo();
       subLayerNum = track->GetTouchable()->GetVolume(3)->GetCopyNo();
@@ -115,7 +115,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
       }
       // Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
       // fMuonHitCollection->insert(hit);
-      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum,tme ));
+      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, track->GetMomentum(),maskNum,tme ));
       /*hit->Print();
       delete hit;*/
     }

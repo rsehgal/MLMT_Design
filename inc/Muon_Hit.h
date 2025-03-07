@@ -7,6 +7,7 @@
 #define Muon_Hit_h
 
 #include "G4VHit.hh"
+#include "G4ThreeVector.hh"
 class Muon_Hit : public G4VHit {
 public:
   int fLayerNum;
@@ -14,9 +15,10 @@ public:
   int fStripNum;
   int fMaskNum;
   unsigned long long fTime;
+  G4ThreeVector fMomentum;
 public:
   Muon_Hit();
-  Muon_Hit(int layerNum, int planeNum, int stripNum, int maskNum = -1,unsigned long long tme=0);
+  Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momentum, int maskNum = -1,unsigned long long tme=0);
   virtual ~Muon_Hit();
   int GetChannelNum(int n=10);
   double GetStripCenter();

@@ -42,7 +42,7 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   }
 
   //Scatterer under test
-  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
   new G4PVPlacement(0, G4ThreeVector(0, 0., 20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
                     checkOverlaps);
   new G4PVPlacement(0, G4ThreeVector(20*cm, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 1,
@@ -51,8 +51,12 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
                     checkOverlaps);  new G4PVPlacement(0, G4ThreeVector(0., 0., -20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 3,
                     checkOverlaps);
 
+G4RotationMatrix* rotation = new G4RotationMatrix();
+rotation->rotateX(90.0 * deg);
 
-
+  G4LogicalVolume *logicalTube = (new CylindricalShell("TubeScatterer", 3*cm , 6 * cm, 10 * cm,0.,2*M_PI, "G4_Pb"))->GetLogicalVolume();
+  new G4PVPlacement(rotation, G4ThreeVector(0, 0., 0), logicalTube, "PhysicalTubeScatterer", fLogicalVolume, false, 0,
+                    checkOverlaps);
 
 
 

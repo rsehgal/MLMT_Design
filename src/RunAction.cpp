@@ -80,6 +80,9 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("y");
   analMan->CreateNtupleDColumn("z");
   analMan->CreateNtupleDColumn("dev");
+  analMan->CreateNtupleDColumn("devMomentum");
+  analMan->CreateNtupleDColumn("momentum");
+  analMan->CreateNtupleDColumn("g4Momentum");
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 

@@ -20,7 +20,10 @@ extern int gNumOfStripsZ;
 extern int gNumOfMasks;
 extern std::vector<double> yPosVec;
 extern std::map<int,G4ThreeVector> hitPointVec;
+extern std::map<int,G4ThreeVector> momentumVec;
 
 
 extern void InitializeHitPointVec();
+
+extern std::vector<G4ThreeVector> vecOfPts;
 #endif

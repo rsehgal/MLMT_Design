@@ -12,6 +12,7 @@
 class EventAction : public G4UserEventAction {
   Track fIncomingTrack;
   Track fOutgoingTrack;
+  Track fMomentumTrack;
 
 public:
   EventAction();

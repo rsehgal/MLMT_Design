@@ -5,6 +5,11 @@
 */
 #include<iostream>
 #include "Helpers.h"
+#include "G4VisManager.hh"
+#include "G4VVisManager.hh"
+#include "G4Circle.hh"
+#include "G4Colour.hh"
+#include "G4VisAttributes.hh"
 
 using Vec_t = G4ThreeVector;
 using Precision = double;
@@ -54,5 +59,23 @@ Vec_t POCA(Track incoming, Track outgoing)
 	// std::cout<<"OUTGoing Track : "; outgoing.Print();
 	return POCA(incoming.GetP1(), incoming.GetDirCosine(), outgoing.GetP1(), outgoing.GetDirCosine(), p1, q1);
 	// return POCA_V3(incoming,outgoing);
+}
+
+
+void DrawPoint(const G4ThreeVector& position) {
+    G4VVisManager* visManager = G4VVisManager::GetConcreteInstance();
+    if (!visManager) return;
+
+    // Create a marker (circle) at the given position
+    G4Circle circle(position);
+    circle.SetScreenSize(5.0);  // Adjust size of the point
+    circle.SetFillStyle(G4Circle::filled);
+
+    // Set color and attributes
+    G4VisAttributes attributes(G4Colour(1.0, 0.0, 0.0));  // Red color
+    circle.SetVisAttributes(attributes);
+
+    // Draw in the visualization manager
+    visManager->Draw(circle);
 }
 

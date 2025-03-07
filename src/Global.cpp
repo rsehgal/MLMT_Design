@@ -16,9 +16,13 @@ int gNumOfMasks = 10;
 std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
 
 std::map<int, G4ThreeVector> hitPointVec;
+std::map<int, G4ThreeVector> momentumVec;
 
 void InitializeHitPointVec() {
   for (unsigned int i = 0; i < yPosVec.size(); i++) {
     hitPointVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
+    momentumVec[i] = G4ThreeVector(0.,0.,0.);
   }
 }
+
+std::vector<G4ThreeVector> vecOfPts;

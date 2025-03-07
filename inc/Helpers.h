@@ -13,5 +13,5 @@ using Vec_t = G4ThreeVector;
 
 extern Vec_t POCA(Track incoming, Track outgoing);
 extern Vec_t POCA(Vec_t p, Vec_t u, Vec_t q, Vec_t v, Vec_t &p1, Vec_t &q1);
-
+extern void DrawPoint(const G4ThreeVector& position);
 #endif

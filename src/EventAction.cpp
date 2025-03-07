@@ -60,6 +60,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
       analMan->FillNtupleDColumn(1, 7, hitStrip->GetStripCenter());
       hitPointVec[hitStrip->fLayerNum].setZ(hitStrip->GetStripCenter());
     }
+    momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
     analMan->FillNtupleDColumn(1, 8, event->GetEventID());
     analMan->AddNtupleRow(1);
   }
@@ -82,13 +83,16 @@ void EventAction::EndOfEventAction(const G4Event *event)
     // Resetting previously set tracks
     fIncomingTrack.Reset();
     fOutgoingTrack.Reset();
+    fMomentumTrack.Reset();
 
     for (int i = hitPointVec.size() - 1; i >= 0; i--) {
       analMan->FillNtupleDColumn(2, 0, i);
       analMan->FillNtupleDColumn(2, 1, hitPointVec[i].x());
       analMan->FillNtupleDColumn(2, 2, hitPointVec[i].y());
       analMan->FillNtupleDColumn(2, 3, hitPointVec[i].z());
-      analMan->FillNtupleDColumn(2, 4, event->GetEventID());
+      analMan->FillNtupleDColumn(2, 4, event->GetEventID(
+
+));
       analMan->AddNtupleRow(2);
     }
 
@@ -97,11 +101,19 @@ void EventAction::EndOfEventAction(const G4Event *event)
     fIncomingTrack.SetP2(hitPointVec[4]);
     fOutgoingTrack.SetP1(hitPointVec[3]);
     fOutgoingTrack.SetP2(hitPointVec[2]);
+    fMomentumTrack.SetP1(hitPointVec[1]);
+    fMomentumTrack.SetP2(hitPointVec[0]);
 
     /*std::cout << "--------------------------------------" << std::endl;
     fIncomingTrack.Print();
     fOutgoingTrack.Print();*/
     double dev = fIncomingTrack.Angle(fOutgoingTrack);
+    double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
+   
+    //Momentum calculation using Scattering method
+    double momentum = 13313.6/devMomentum;
+    double g4CalcMomentum = momentumVec[0].mag(); 
+
     //if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01) 
      {
       G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
@@ -112,7 +124,10 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(3, 1, poca.y());
         analMan->FillNtupleDColumn(3, 2, poca.z());
         analMan->FillNtupleDColumn(3, 3, dev);
-        analMan->FillNtupleDColumn(3, 4, event->GetEventID());
+        analMan->FillNtupleDColumn(3, 4, devMomentum);
+        analMan->FillNtupleDColumn(3, 5, momentum);
+        analMan->FillNtupleDColumn(3, 6, g4CalcMomentum);
+        analMan->FillNtupleDColumn(3, 7, event->GetEventID());
         analMan->AddNtupleRow(3);
       }
     }
