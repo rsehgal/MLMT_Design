@@ -83,8 +83,11 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(../..)
 
 find_package(ROOT REQUIRED)
+include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIRS})
 #set(REQLIBS ${REQLIBS} ${ROOT_LIBRARIES} )
+
+include_directories(visualizer)
 
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.h ${PROJECT_SOURCE_DIR}/inc/*.hh ../../base/Vector3D.h) 
@@ -103,6 +106,8 @@ endif()
 add_executable(Test_Track core/Test_Track.cpp ${PROJECT_SOURCE_DIR}/src/Track.cpp ${PROJECT_SOURCE_DIR}/src/Helpers.cpp)
 target_link_libraries(Test_Track ${Geant4_LIBRARIES})
 
+add_executable(TestEve core/TestEve.cpp visualizer/EveVisualizer.cpp)
+target_link_libraries(TestEve ${ROOT_LIBRARIES} Eve RGL Gui Gpad Core)
 #add_executable(Test_Visualization core/Test_Visualization.cpp ${PROJECT_SOURCE_DIR}/src/Track.cpp ${PROJECT_SOURCE_DIR}/src/Helpers.cpp)
 #target_link_libraries(Test_Visualization ${Geant4_LIBRARIES})
 
