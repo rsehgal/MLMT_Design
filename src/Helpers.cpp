@@ -79,3 +79,21 @@ void DrawPoint(const G4ThreeVector& position) {
     visManager->Draw(circle);
 }
 
+
+//const double X0 = 5.6; // Radiation length for lead in cm
+//const double SCATTERING_CONST = 13.6e-3; // 13.6 MeV converted to GeV
+
+// Function to compute path length in the material
+double ComputePathLength(double d, double theta_in, double theta_out) {
+    double theta_eff = (theta_in + theta_out) / 2.0;
+    return d / cos(theta_eff);
+}
+
+// Function to estimate muon momentum using Molière’s formula
+double EstimateMomentum(double theta_scatt, double L) {
+    if (theta_scatt == 0 || L == 0) return std::numeric_limits<double>::infinity(); // Avoid division by zero
+
+    double log_term = 1 + 0.038 * log(L / X0);
+    double p = (SCATTERING_CONST * sqrt(L / X0) * log_term) / theta_scatt;
+    return p;
+}

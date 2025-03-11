@@ -80,8 +80,13 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("y");
   analMan->CreateNtupleDColumn("z");
   analMan->CreateNtupleDColumn("dev");
+  analMan->CreateNtupleDColumn("angleMomentumIncoming");
+  analMan->CreateNtupleDColumn("angleMomentumOutgoing");
+  analMan->CreateNtupleDColumn("pathLength_FromHitPoint");
+  analMan->CreateNtupleDColumn("pathLength_FromScattering");
   analMan->CreateNtupleDColumn("devMomentum");
   analMan->CreateNtupleDColumn("momentum");
+  analMan->CreateNtupleDColumn("momentum_pl");
   analMan->CreateNtupleDColumn("g4Momentum");
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();

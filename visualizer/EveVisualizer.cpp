@@ -14,7 +14,7 @@ EveVisualizer::EveVisualizer()
   gStyle->SetPalette(kRainbow);
   int numColors = gStyle->GetNumberOfColors();
   numOfBins     = numColors; // 50;
- binWidth      =  0.7/ numOfBins;
+  binWidth      = 0.7 / numOfBins;
   TEveManager::Create();
   for (unsigned int i = 0; i < numOfBins; i++) {
     // for (unsigned int i = 0; i < numColors; i++) {

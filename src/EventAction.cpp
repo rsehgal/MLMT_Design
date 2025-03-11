@@ -90,9 +90,10 @@ void EventAction::EndOfEventAction(const G4Event *event)
       analMan->FillNtupleDColumn(2, 1, hitPointVec[i].x());
       analMan->FillNtupleDColumn(2, 2, hitPointVec[i].y());
       analMan->FillNtupleDColumn(2, 3, hitPointVec[i].z());
-      analMan->FillNtupleDColumn(2, 4, event->GetEventID(
+      analMan->FillNtupleDColumn(2, 4,
+                                 event->GetEventID(
 
-));
+                                     ));
       analMan->AddNtupleRow(2);
     }
 
@@ -107,27 +108,40 @@ void EventAction::EndOfEventAction(const G4Event *event)
     /*std::cout << "--------------------------------------" << std::endl;
     fIncomingTrack.Print();
     fOutgoingTrack.Print();*/
-    double dev = fIncomingTrack.Angle(fOutgoingTrack);
+    double dev         = fIncomingTrack.Angle(fOutgoingTrack);
     double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
-   
-    //Momentum calculation using Scattering method
-    double momentum = 13313.6/devMomentum;
-    double g4CalcMomentum = momentumVec[0].mag(); 
 
-    //if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01) 
-     {
+    // Momentum calculation using Scattering method
+    double momentum       = 92.7 / devMomentum;
+    double g4CalcMomentum = momentumVec[0].mag();
+
+    // if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01)
+    {
       G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
       // std::cout << "POCA : " << poca << std::endl;
 
-      if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z())) {
+      double L_1 = (fOutgoingTrack.GetP2()-fMomentumTrack.GetP1()).mag()/10.;
+      //20 is directly in cm
+      double L_2 = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
+
+      // Estimate momentum
+      double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
+
+      //if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z())) 
+      {
         analMan->FillNtupleDColumn(3, 0, poca.x());
         analMan->FillNtupleDColumn(3, 1, poca.y());
         analMan->FillNtupleDColumn(3, 2, poca.z());
         analMan->FillNtupleDColumn(3, 3, dev);
-        analMan->FillNtupleDColumn(3, 4, devMomentum);
-        analMan->FillNtupleDColumn(3, 5, momentum);
-        analMan->FillNtupleDColumn(3, 6, g4CalcMomentum);
-        analMan->FillNtupleDColumn(3, 7, event->GetEventID());
+        analMan->FillNtupleDColumn(3, 4, fOutgoingTrack.GetZenithAngle());
+        analMan->FillNtupleDColumn(3, 5, fMomentumTrack.GetZenithAngle());
+        analMan->FillNtupleDColumn(3, 6, L_1);
+        analMan->FillNtupleDColumn(3, 7, L_2);
+        analMan->FillNtupleDColumn(3, 8, devMomentum);
+        analMan->FillNtupleDColumn(3, 9, momentum);
+        analMan->FillNtupleDColumn(3, 10, momentum_pl);
+        analMan->FillNtupleDColumn(3, 11, g4CalcMomentum);
+        analMan->FillNtupleDColumn(3, 12, event->GetEventID());
         analMan->AddNtupleRow(3);
       }
     }
