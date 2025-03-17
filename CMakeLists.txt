@@ -23,6 +23,15 @@ if(USE_CARGO)
 add_definitions(-DUSE_CARGO)
 endif(USE_CARGO)
 
+option(USE_CRY "Use cry to generate muons" OFF)
+if(USE_CRY)
+add_definitions(-DUSE_CRY)
+add_subdirectory(cry)
+include_directories(cry)
+include_directories(cry/Cry/inc)
+link_directories(cry)
+endif(USE_CRY)
+
 option(ICNSE_ENABLE_OPTICAL_PHYSICS "Enabling OPTICAL Physics, Default is OFF " OFF)
 if(ICNSE_ENABLE_OPTICAL_PHYSICS)
 add_definitions(-DICNSE_ENABLE_OPTICAL_PHYSICS)
@@ -87,11 +96,6 @@ include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIRS})
 #set(REQLIBS ${REQLIBS} ${ROOT_LIBRARIES} )
 
-add_subdirectory(cry)
-
-include_directories(cry)
-include_directories(cry/Cry/inc)
-link_directories(cry)
 
 include_directories(visualizer)
 
@@ -100,9 +104,17 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.h ${PROJECT_SOURCE_DIR}/inc/*.hh .
 
 add_executable(main main.cpp ${sources} ${headers})
 if(USE_RANECU_RANDOM)
+if(USE_CRY)
+target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CLHEP_LIBRARIES} cryInterface)
+else()
 target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${CLHEP_LIBRARIES})
+endif(USE_CRY)
+else()
+if(USE_CRY)
+target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} cryInterface)
 else()
 target_link_libraries(main ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+endif(USE_CRY)
 endif()
 
 

@@ -18,6 +18,10 @@
 #include <G4Geantino.hh>
 #include "CLHEP/Random/RandFlat.h"
 #include "Global.h"
+
+#ifdef USE_CRY
+#include "CryInterface.h"
+#endif
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
   // Default place holders
   fParticleGun = new G4ParticleGun(1);
@@ -66,15 +70,28 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   G4ThreeVector endPoint = startPoint; //(-50000,-50000,-50000);
   //endPoint.setY(yPosVec[0]-100);
   endPoint.setY(-1.*ypos);
-#define RANDOM_DIRECTION
+
+  G4ThreeVector dir;
+
+#ifdef USE_CRY
+  CryInterface *cryInteface = new CryInterface();
+  Muon *muon                = cryInteface->SampleMuon();
+  dir.set(muon->angleX,muon->angleY,muon->angleZ);
+#else
+
+//#define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
   //endPoint.set(randX2,yPosVec[0]-100,randZ2);
   endPoint.set(randX2,-1.*ypos,randZ2);
+  dir = endPoint-startPoint;
+#else
+  dir = endPoint-startPoint;
 #endif
 
+#endif
   //G4ThreeVector endPoint(randX2,yPosVec[0]-100,randZ2);
 
-  G4ThreeVector dir = endPoint-startPoint;
+  //G4ThreeVector dir = endPoint-startPoint;
   G4ThreeVector unitDir = dir.unit();
 
   fParticleGun->SetParticlePosition(startPoint);
