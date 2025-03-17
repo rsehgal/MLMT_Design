@@ -36,6 +36,13 @@ if(CCACHE_FOUND)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 endif(CCACHE_FOUND)
 
+option(USE_ROOT "Enable ROOT to create histograms" OFF)
+if(USE_ROOT)
+add_definitions(-DUSE_ROOT)
+find_package(ROOT REQUIRED)
+include(${ROOT_USE_FILE})
+endif(USE_ROOT)
+
 #add_subdirectory(Cry)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -45,15 +52,12 @@ file(GLOB sourcesCryInterface ${sourcesCryInterface} ${CMAKE_CURRENT_SOURCE_DIR}
 
 add_library(cryInterface SHARED ${sourcesCryInterface})
 
-#add_executable(testMain ${CMAKE_CURRENT_SOURCE_DIR}/test/testMain.cc)
-#target_link_libraries(testMain cry)
-#add_executable(testDistribution ${CMAKE_CURRENT_SOURCE_DIR}/test/testDistribution.cc)
-#target_link_libraries(testDistribution cry ${ROOT_LIBRARIES})
-#
-#add_executable(testOut ${CMAKE_CURRENT_SOURCE_DIR}/test/testOut.cc)
-#target_link_libraries(testOut cry)
-#
-#add_executable(testRoot ${CMAKE_CURRENT_SOURCE_DIR}/test/testRoot.cc)
-#target_link_libraries(testRoot cry ${ROOT_LIBRARIES})
+add_executable(Test_Cry ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Cry.cpp)
 
+link_directories(.)
+if(USE_ROOT)
+target_link_libraries(Test_Cry cryInterface ${ROOT_LIBRARIES})
+else()
+target_link_libraries(Test_Cry cryInterface)
+endif(USE_ROOT)
 

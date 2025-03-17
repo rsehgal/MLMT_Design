@@ -115,8 +115,8 @@ target_link_libraries(Test_Track ${Geant4_LIBRARIES})
 add_executable(TestEve core/TestEve.cpp visualizer/EveVisualizer.cpp)
 target_link_libraries(TestEve ${ROOT_LIBRARIES} Eve RGL Gui Gpad Core)
 
-add_executable(Test_Cry core/Test_Cry.cpp)
-target_link_libraries(Test_Cry ${ROOT_LIBRARIES} cryInterface)
+#add_executable(Test_Cry core/Test_Cry.cpp)
+#target_link_libraries(Test_Cry ${ROOT_LIBRARIES} cryInterface)
 
 #add_executable(Test_Visualization core/Test_Visualization.cpp ${PROJECT_SOURCE_DIR}/src/Track.cpp ${PROJECT_SOURCE_DIR}/src/Helpers.cpp)
 #target_link_libraries(Test_Visualization ${Geant4_LIBRARIES})
