@@ -69,7 +69,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
   //Used for unidirection muon beam
   //G4ThreeVector startPoint(0.,yPosVec[3]+100,0.);
-  double ypos = 150*cm;
+  double ypos = gunPos;//150*cm;
   //G4ThreeVector startPoint(randX1,yPosVec[3]+100,randZ1);
   G4ThreeVector startPoint(randX1,ypos,randZ1);
   G4ThreeVector endPoint = startPoint; //(-50000,-50000,-50000);
@@ -84,7 +84,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   fParticleGun->SetParticleEnergy(muon->energy);
 #else
 
-//#define RANDOM_DIRECTION
+  fParticleGun->SetParticleEnergy(2*GeV);
+#define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
   //endPoint.set(randX2,yPosVec[0]-100,randZ2);
   endPoint.set(randX2,-1.*ypos,randZ2);
@@ -93,6 +94,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   dir = endPoint-startPoint;
 #endif
 
+//  fParticleGun->SetParticleEnergy(2*GeV);
 #endif
   //G4ThreeVector endPoint(randX2,yPosVec[0]-100,randZ2);
 

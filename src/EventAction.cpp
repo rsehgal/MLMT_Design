@@ -53,16 +53,21 @@ void EventAction::EndOfEventAction(const G4Event *event)
     analMan->FillNtupleDColumn(1, 3, hitStrip->fMaskNum);
     analMan->FillNtupleDColumn(1, 4, hitStrip->GetChannelNum());
     analMan->FillNtupleDColumn(1, 6, yPosVec[hitStrip->fLayerNum]);
+    if(hitStrip->fMaskNum >=0 && hitStrip->fStripNum >=0){
     if (hitStrip->fPlaneNum == 0) {
       analMan->FillNtupleDColumn(1, 5, hitStrip->GetStripCenter());
       hitPointVec[hitStrip->fLayerNum].setX(hitStrip->GetStripCenter());
+      stripNumVec[hitStrip->fLayerNum].setX(hitStrip->fMaskNum*numOfGroups + hitStrip->fStripNum);
     } else {
       analMan->FillNtupleDColumn(1, 7, hitStrip->GetStripCenter());
       hitPointVec[hitStrip->fLayerNum].setZ(hitStrip->GetStripCenter());
+      stripNumVec[hitStrip->fLayerNum].setZ(hitStrip->fMaskNum*numOfGroups + hitStrip->fStripNum);
     }
     momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
     analMan->FillNtupleDColumn(1, 8, event->GetEventID());
     analMan->AddNtupleRow(1);
+
+    }
   }
 
   // std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
@@ -90,7 +95,9 @@ void EventAction::EndOfEventAction(const G4Event *event)
       analMan->FillNtupleDColumn(2, 1, hitPointVec[i].x());
       analMan->FillNtupleDColumn(2, 2, hitPointVec[i].y());
       analMan->FillNtupleDColumn(2, 3, hitPointVec[i].z());
-      analMan->FillNtupleDColumn(2, 4,
+      analMan->FillNtupleDColumn(2, 4, stripNumVec[i].x());
+      analMan->FillNtupleDColumn(2, 5, stripNumVec[i].z());
+      analMan->FillNtupleDColumn(2, 6,
                                  event->GetEventID(
 
                                      ));

@@ -14,6 +14,7 @@
 #include "Muon_Hit.h"
 #include "Scint_Hit.h"
 #include "HitCollections.h"
+#include "Global.h"
 SD::SD(const G4String detName) : G4VSensitiveDetector(detName) {}
 
 SD::SD(const G4String detName, G4String collName) : G4VSensitiveDetector(detName)
@@ -66,7 +67,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
 
     G4AnalysisManager *analMan = G4AnalysisManager::Instance();
 
-    unsigned short n = 10;
+    unsigned short n = numOfGroups;//10;
 
     // unsigned int
     stripNum = track->GetTouchable()->GetVolume()->GetCopyNo();

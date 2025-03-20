@@ -19,8 +19,10 @@ extern int gNumOfStripsZ;
 
 extern int gNumOfMasks;
 extern std::vector<double> yPosVec;
+extern double gunPos;
 extern std::map<int,G4ThreeVector> hitPointVec;
 extern std::map<int,G4ThreeVector> momentumVec;
+extern std::map<int,G4ThreeVector> stripNumVec;
 
 
 extern void InitializeHitPointVec();

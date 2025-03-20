@@ -9,8 +9,8 @@
 #include "G4ParticleGun.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
-#include "CryInterface.h"
-
+//#include "CryInterface.h"
+class CryInterface;
 class G4ParticleGun;
 class G4Event;
 class G4Box;

@@ -71,6 +71,8 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("x");
   analMan->CreateNtupleDColumn("y");
   analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("stripNumX");
+  analMan->CreateNtupleDColumn("stripNumZ");
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 

@@ -5,32 +5,42 @@
 */
 #include "G4SystemOfUnits.hh"
 #include "Global.h"
-double gPlaneSizeX = 112.4 * cm;
-double gPlaneSizeZ = 112.4 * cm;
-double gPlaneSize = 112.4 * cm;
-int gNumOfStrips = 100;
-int gNumOfStripsX = 100;
-int gNumOfStripsZ = 100;
-
-int gNumOfMasks = 10;
-//std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
-std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
-
+std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+//std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
+double gunPos = 100*cm;
 std::map<int, G4ThreeVector> hitPointVec;
 std::map<int, G4ThreeVector> momentumVec;
+std::map<int, G4ThreeVector> stripNumVec;
 
 void InitializeHitPointVec() {
   for (unsigned int i = 0; i < yPosVec.size(); i++) {
     hitPointVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
     momentumVec[i] = G4ThreeVector(0.,0.,0.);
+    stripNumVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
   }
 }
 
 std::vector<G4ThreeVector> vecOfPts;
 
 
-double scintHalfx = 3.125*cm;//0.5*cm;
-double scintHalfy = 3.125*cm;
-double scintHalfz = 52*cm ;
-unsigned int numOfScintillators = 16;
-unsigned int numOfGroups = 4;
+//double scintHalfx = 3.125*cm;//0.5*cm;
+//double scintHalfy = 0.5*cm;
+//double scintHalfz = 52*cm ;
+//unsigned int numOfScintillators = 16;
+//unsigned int numOfGroups = 4;
+
+double scintHalfx = 0.5*cm;//0.5*cm;
+double scintHalfy = 0.5*cm;
+double scintHalfz = 56.2*cm ;
+unsigned int numOfScintillators = 100;
+unsigned int numOfGroups = 10;
+
+double gPlaneSizeZ = scintHalfz*2;//112.4 * cm;
+double gPlaneSizeX = gPlaneSizeZ;//112.4 * cm;
+double gPlaneSize = gPlaneSizeZ;//112.4 * cm;
+int gNumOfStrips =  numOfScintillators;//100;
+int gNumOfStripsX = numOfScintillators;//100;
+int gNumOfStripsZ = numOfScintillators;//100;
+int gNumOfMasks = numOfGroups;//10;
+
+
