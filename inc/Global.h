@@ -26,4 +26,11 @@ extern std::map<int,G4ThreeVector> momentumVec;
 extern void InitializeHitPointVec();
 
 extern std::vector<G4ThreeVector> vecOfPts;
+
+extern double scintHalfx ;
+extern double scintHalfy ;
+extern double scintHalfz ;
+extern unsigned int numOfScintillators;
+extern unsigned int numOfGroups;
+
 #endif

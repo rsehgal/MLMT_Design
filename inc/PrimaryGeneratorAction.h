@@ -9,12 +9,14 @@
 #include "G4ParticleGun.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
+#include "CryInterface.h"
 
 class G4ParticleGun;
 class G4Event;
 class G4Box;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
+CryInterface *cryInterface;
 public:
   PrimaryGeneratorAction();
   ~PrimaryGeneratorAction();

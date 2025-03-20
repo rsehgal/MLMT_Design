@@ -27,10 +27,12 @@ int main(int argc, char *argv[])
   muon->Print();
 
   #ifdef USE_ROOT
-  TH1F *hist    = new TH1F("Zenith", "Zenith", 50., 0, M_PI / 2.);
+  unsigned int numOfBins = 40;
+  TH1F *hist    = new TH1F("Zenith", "Zenith", numOfBins, 0, M_PI / 2.);
+  TH1F *histSolidAngleCorrected    = new TH1F("ZenithSolidCorrected", "Solid Angle corrected Zenith Angle ", numOfBins, 0, M_PI / 2.);
   TH1F *histPhi = new TH1F("Azimuthal", "Azimuthal", 200., -1. * M_PI, M_PI);
 
-  unsigned int numOfMuons = 1000000;
+  unsigned int numOfMuons = 5000000;
 
 
   TApplication *fApp        = new TApplication("fApp", NULL, NULL);
@@ -45,12 +47,25 @@ int main(int argc, char *argv[])
     // std::cout << (muon->angleY) <<" : " << (incoming.Mag()) << std::endl;
   }
 
+  
+  for(unsigned int i = 1 ; i < hist->GetNbinsX()-1 ; i++){
+	double binCenter = hist->GetXaxis()->GetBinCenter(i);
+	histSolidAngleCorrected->SetBinContent(i,hist->GetBinContent(i)/(std::sin(binCenter)*std::cos(binCenter)));
+  } 
+
 
   TF1 *cosSqr = new TF1("cosSqr", "[0]*sin(x)*cos(x)*pow(cos(x),[1])", 0., M_PI / 2.);
+  TF1 *cosSqr2 = new TF1("cosSqr_SolidAngleCorrected", "[0]*pow(cos(x),[1])", 0., M_PI / 2.);
   hist->Fit(cosSqr);
 
   hist->Draw("hist");
   cosSqr->Draw("same");
+
+  new TCanvas;
+  histSolidAngleCorrected->Fit(cosSqr2);
+  histSolidAngleCorrected->Draw("hist");
+  cosSqr2->Draw("same");
+
 
   new TCanvas;
   histPhi->Draw("hist");

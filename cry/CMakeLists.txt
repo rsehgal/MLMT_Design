@@ -53,10 +53,12 @@ file(GLOB sourcesCryInterface ${sourcesCryInterface} ${CMAKE_CURRENT_SOURCE_DIR}
 add_library(cryInterface SHARED ${sourcesCryInterface})
 
 add_executable(Test_Cry ${CMAKE_CURRENT_SOURCE_DIR}/test/Test_Cry.cpp)
+add_executable(testDistribution ${CMAKE_CURRENT_SOURCE_DIR}/test/testDistribution.cpp)
 
 link_directories(.)
 if(USE_ROOT)
 target_link_libraries(Test_Cry cryInterface ${ROOT_LIBRARIES})
+target_link_libraries(testDistribution cryInterface ${ROOT_LIBRARIES})
 else()
 target_link_libraries(Test_Cry cryInterface)
 endif(USE_ROOT)

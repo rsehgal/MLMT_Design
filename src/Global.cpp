@@ -13,7 +13,8 @@ int gNumOfStripsX = 100;
 int gNumOfStripsZ = 100;
 
 int gNumOfMasks = 10;
-std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+//std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
 
 std::map<int, G4ThreeVector> hitPointVec;
 std::map<int, G4ThreeVector> momentumVec;
@@ -26,3 +27,10 @@ void InitializeHitPointVec() {
 }
 
 std::vector<G4ThreeVector> vecOfPts;
+
+
+double scintHalfx = 3.125*cm;//0.5*cm;
+double scintHalfy = 3.125*cm;
+double scintHalfz = 52*cm ;
+unsigned int numOfScintillators = 16;
+unsigned int numOfGroups = 4;

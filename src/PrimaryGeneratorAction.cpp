@@ -33,6 +33,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() {
   fParticleGun->SetParticleMomentumDirection(mom);
   fParticleGun->SetParticleMomentum(0. * GeV);
   fParticleGun->SetParticleDefinition(particle);
+
+#ifdef USE_CRY
+  cryInterface = new CryInterface();
+#endif
+
 }
 PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }
 
@@ -74,9 +79,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   G4ThreeVector dir;
 
 #ifdef USE_CRY
-  CryInterface *cryInteface = new CryInterface();
-  Muon *muon                = cryInteface->SampleMuon();
+  Muon *muon                = cryInterface->SampleMuon();
   dir.set(muon->angleX,muon->angleY,muon->angleZ);
+  fParticleGun->SetParticleEnergy(muon->energy);
 #else
 
 //#define RANDOM_DIRECTION
