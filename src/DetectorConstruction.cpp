@@ -28,6 +28,7 @@
 #include <G4OpticalSurface.hh>
 #include <G4SDManager.hh>
 #include <G4RotationMatrix.hh>
+#include "Global.h"
 DetectorConstruction::DetectorConstruction()
 {
   fSDMan = G4SDManager::GetSDMpointer();
@@ -135,7 +136,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   }
 */
 
-G4LogicalVolume *logicalSingleTelescope = (new SingleTelescope("SingleTelescope", 100, 10))->GetLogicalVolume();
+G4LogicalVolume *logicalSingleTelescope = (new SingleTelescope("SingleTelescope", numOfScintillators, numOfGroups))->GetLogicalVolume();
 //using tracker approach
 /*G4LogicalVolume *logicalTracker = (new Tracker("SingleTelescope", 100, 10))->GetLogicalVolume();
 G4Box *solid                 = static_cast<G4Box *>(logicalTracker->GetSolid());

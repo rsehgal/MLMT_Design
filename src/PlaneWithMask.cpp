@@ -10,20 +10,21 @@
 #include <G4Box.hh>
 #include <G4SystemOfUnits.hh>
 #include "G4PVPlacement.hh"
+#include "Global.h"
 PlaneWithMask::PlaneWithMask(){}
 
 PlaneWithMask::~PlaneWithMask(){}
 
 PlaneWithMask::PlaneWithMask(G4String name, unsigned int numOfScintillators, unsigned short numOfGroups){
 
-  double scintHalfx = 0.5 * cm;
-  double scintHalfy = 0.5 * cm;
+  //double scintHalfx = 0.5 * cm;
+  //double scintHalfy = 0.5 * cm;
 
   //This needs to be carefully calculated, as we have kept a gap of 1 mm between scintillator.
   //Hence, to make the X & Y plane completely overlapping the Z length of the scintillator 
   //must be equal to 100 cm (considering each scintillator is 1 cm wide) plus the addition
   //of all the gaps, which in this case comes out to be 112.4 cm.
-  double scintHalfz = 56.2 * cm;
+  //double scintHalfz = 56.2 * cm;
 
   Scintillator *scintillator = new Scintillator("ScintillatorCrystal", scintHalfx, scintHalfy, scintHalfz,"G4_Galactic");
 
