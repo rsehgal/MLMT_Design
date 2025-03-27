@@ -5,9 +5,16 @@
 */
 #include "G4SystemOfUnits.hh"
 #include "Global.h"
-std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
-//std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
-double gunPos = 100*cm;
+//std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
+
+//This must be defined to a value above topmost plane.
+double gunPos = 120*cm;
+
+//The lowermost value used to generated random direction, if not using CRY
+//This value should be less than bottom-most plane
+double ybottom = -160.*cm;
+
 std::map<int, G4ThreeVector> hitPointVec;
 std::map<int, G4ThreeVector> momentumVec;
 std::map<int, G4ThreeVector> stripNumVec;

@@ -74,7 +74,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   G4ThreeVector startPoint(randX1,ypos,randZ1);
   G4ThreeVector endPoint = startPoint; //(-50000,-50000,-50000);
   //endPoint.setY(yPosVec[0]-100);
-  endPoint.setY(-1.*ypos);
+  endPoint.setY(ybottom);
 
   G4ThreeVector dir;
 
@@ -88,7 +88,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 #define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
   //endPoint.set(randX2,yPosVec[0]-100,randZ2);
-  endPoint.set(randX2,-1.*ypos,randZ2);
+  endPoint.setX(randX2);
+  endPoint.setZ(randZ2);
   dir = endPoint-startPoint;
 #else
   dir = endPoint-startPoint;
