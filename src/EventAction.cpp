@@ -105,8 +105,8 @@ void EventAction::EndOfEventAction(const G4Event *event)
     }
 
     // Hardcoded for incoming and outgoing track of size 2
-    fIncomingTrack.SetP1(hitPointVec[5]);
-    fIncomingTrack.SetP2(hitPointVec[4]);
+    fIncomingTrack.SetP1(hitPointVec[3]);
+    fIncomingTrack.SetP2(hitPointVec[2]);
     fOutgoingTrack.SetP1(hitPointVec[3]);
     fOutgoingTrack.SetP2(hitPointVec[2]);
     fMomentumTrack.SetP1(hitPointVec[1]);
@@ -151,7 +151,32 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(3, 11, g4CalcMomentum);
         analMan->FillNtupleDColumn(3, 12, event->GetEventID());
         analMan->AddNtupleRow(3);
-      }
+
+	}
+
+#ifdef ML_TREE
+        analMan->FillNtupleDColumn(4, 0, fOutgoingTrack.GetP1().x());
+        analMan->FillNtupleDColumn(4, 1, fOutgoingTrack.GetP1().y());
+        analMan->FillNtupleDColumn(4, 2, fOutgoingTrack.GetP1().z());
+	analMan->FillNtupleDColumn(4, 3, fOutgoingTrack.GetP2().x());
+        analMan->FillNtupleDColumn(4, 4, fOutgoingTrack.GetP2().y());
+        analMan->FillNtupleDColumn(4, 5, fOutgoingTrack.GetP2().z());
+	analMan->FillNtupleDColumn(4, 6, fMomentumTrack.GetP1().x());
+        analMan->FillNtupleDColumn(4, 7, fMomentumTrack.GetP1().y());
+        analMan->FillNtupleDColumn(4, 8, fMomentumTrack.GetP1().z());
+	analMan->FillNtupleDColumn(4, 9, fMomentumTrack.GetP2().x());
+        analMan->FillNtupleDColumn(4, 10, fMomentumTrack.GetP2().y());
+        analMan->FillNtupleDColumn(4, 11, fMomentumTrack.GetP2().z());
+        analMan->FillNtupleDColumn(4, 12, L_2);
+        analMan->FillNtupleDColumn(4, 13, fOutgoingTrack.GetZenithAngle());
+        analMan->FillNtupleDColumn(4, 14, fMomentumTrack.GetZenithAngle());
+        analMan->FillNtupleDColumn(4, 15, devMomentum);
+        analMan->FillNtupleDColumn(4, 16, momentum);
+        analMan->FillNtupleDColumn(4, 17, g4CalcMomentum);
+        analMan->FillNtupleDColumn(4, 18, event->GetEventID());
+        analMan->AddNtupleRow(4);
+#endif
+      
     }
   }
   /* std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;

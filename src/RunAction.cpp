@@ -93,6 +93,30 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("eventNum");
   analMan->FinishNtuple();
 
+#ifdef ML_TREE
+  analMan->CreateNtuple("mlData", "A TTree with data for ML");
+  analMan->CreateNtupleDColumn("x1");
+  analMan->CreateNtupleDColumn("y1");
+  analMan->CreateNtupleDColumn("z1");
+  analMan->CreateNtupleDColumn("x2");
+  analMan->CreateNtupleDColumn("y2");
+  analMan->CreateNtupleDColumn("z2");
+  analMan->CreateNtupleDColumn("x3");
+  analMan->CreateNtupleDColumn("y3");
+  analMan->CreateNtupleDColumn("z3");
+  analMan->CreateNtupleDColumn("x4");
+  analMan->CreateNtupleDColumn("y4");
+  analMan->CreateNtupleDColumn("z4");
+  analMan->CreateNtupleDColumn("pathLength");
+  analMan->CreateNtupleDColumn("angleIncoming");
+  analMan->CreateNtupleDColumn("angleOutgoing");
+  analMan->CreateNtupleDColumn("deviation");
+  analMan->CreateNtupleDColumn("myMomentum");
+  analMan->CreateNtupleDColumn("g4Momentum");
+  analMan->CreateNtupleDColumn("eventNum");
+  analMan->FinishNtuple();
+#endif
+
   std::cout <<"RAMAN : Tree structure created..." << std::endl;
   //TTree structure created
 }

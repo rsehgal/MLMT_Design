@@ -37,6 +37,11 @@ if(KILL_SECONDARIES)
 add_definitions(-DKILL_SECONDARIES)
 endif(KILL_SECONDARIES)
 
+option(ML_TREE "Write Separate tree for ML " OFF)
+if(ML_TREE)
+add_definitions(-DML_TREE)
+endif(ML_TREE)
+
 option(RANDOM_DIRECTION "Random direction in case CRY is not used " ON)
 if(RANDOM_DIRECTION)
 add_definitions(-DRANDOM_DIRECTION)
