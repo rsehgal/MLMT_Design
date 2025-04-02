@@ -32,6 +32,16 @@ include_directories(cry/Cry/inc)
 link_directories(cry)
 endif(USE_CRY)
 
+option(KILL_SECONDARIES "Kill secondaries particles produced during the simulation " OFF)
+if(KILL_SECONDARIES)
+add_definitions(-DKILL_SECONDARIES)
+endif(KILL_SECONDARIES)
+
+option(RANDOM_DIRECTION "Random direction in case CRY is not used " ON)
+if(RANDOM_DIRECTION)
+add_definitions(-DRANDOM_DIRECTION)
+endif(RANDOM_DIRECTION)
+
 option(ICNSE_ENABLE_OPTICAL_PHYSICS "Enabling OPTICAL Physics, Default is OFF " OFF)
 if(ICNSE_ENABLE_OPTICAL_PHYSICS)
 add_definitions(-DICNSE_ENABLE_OPTICAL_PHYSICS)

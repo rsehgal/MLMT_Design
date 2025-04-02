@@ -132,7 +132,8 @@ void EventAction::EndOfEventAction(const G4Event *event)
       double L_2 = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
 
       // Estimate momentum
-      double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
+      //double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
+      double momentum_pl = EstimateMomentum(devMomentum);//, L_1)*1000.;
 
       //if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z())) 
       {

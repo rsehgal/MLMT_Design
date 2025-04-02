@@ -10,7 +10,6 @@ TrackingAction::~TrackingAction() {}
 void TrackingAction::PreUserTrackingAction(const G4Track *track)
 {
 
-#define KILL_SECONDARIES
 #ifdef KILL_SECONDARIES
   if (track->GetTrackID() > 1) {
     G4Track *nonconstTrack = (G4Track *)track;

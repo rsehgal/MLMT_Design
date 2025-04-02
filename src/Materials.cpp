@@ -87,12 +87,13 @@ void Materials::CreateScintillatorMaterial() {
 #ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
   AttachScintillatorOpticalProperties(scintMaterial);
 #endif
-  // fMaterialMap["ICNSE_PS"] = scintMaterial;
+  fMaterialMap["ICNSE_PS"] = scintMaterial;
 }
 
 #ifdef ICNSE_ENABLE_OPTICAL_PHYSICS
 void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
 
+#if(0)
   std::vector<G4double> reflectivity = {1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
                                         1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};
 
@@ -137,14 +138,66 @@ void Materials::AttachScintillatorOpticalProperties(G4Material *material) {
   myMPT1->AddConstProperty("FASTTIMECONSTANT", 0.9 * ns);
   myMPT1->AddConstProperty("SLOWTIMECONSTANT", 2.1 * ns);
   myMPT1->AddConstProperty("YIELDRATIO", 0.8);
+#endif
 
+auto myMPT1 = new G4MaterialPropertiesTable();
+// Photon energy array (in eV)
+const G4int nEntries = 2;
+/*
+//Working
+G4double photonEnergy[nEntries] = {2.95 * eV, 3.26 * eV};  // 415 nm to 380 nm
+
+// Refractive index for NaI(Tl)
+G4double refractiveIndex[nEntries] = {1.85, 1.85};
+myMPT1->AddProperty("RINDEX", photonEnergy, refractiveIndex, nEntries);
+
+// Absorption length (in mm)
+G4double absorptionLength[nEntries] = {2600. * mm, 2600. * mm};
+myMPT1->AddProperty("ABSLENGTH", photonEnergy, absorptionLength, nEntries);
+
+// Emission spectrum for fast and slow components
+G4double scintilFast[nEntries] = {0.1, 0.1};
+G4double scintilSlow[nEntries] = {0.9, 0.9};
+myMPT1->AddProperty("SCINTILLATIONCOMPONENT1", photonEnergy, scintilFast, nEntries);
+myMPT1->AddProperty("SCINTILLATIONCOMPONENT2", photonEnergy, scintilSlow, nEntries);
+
+// Set scintillation yield and time constants
+myMPT1->AddConstProperty("SCINTILLATIONYIELD", 1000. / MeV);
+myMPT1->AddConstProperty("RESOLUTIONSCALE", 1.0);
+myMPT1->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 0.9 * ns);
+myMPT1->AddConstProperty("SCINTILLATIONTIMECONSTANT2", 2.1 * us);
+myMPT1->AddConstProperty("SCINTILLATIONYIELD1", 0.1);
+myMPT1->AddConstProperty("SCINTILLATIONYIELD2", 0.9);
+*/
+
+{
+ G4double PhotonEnergy[nEntries]= {2.0*eV, 3.5*eV};
+ G4double FastComponent[nEntries] = {1.0, 1.0}; // 100% fast component
+G4double RefractiveIndex[nEntries] = {1.58, 1.58}; // Typical for plastic scintillators
+G4double AbsorptionLength[nEntries] = {380*cm, 380*cm}; // Attenuation length in plastic scintillator
+
+// Create Material Properties Table
+myMPT1->AddProperty("SCINTILLATIONCOMPONENT1", PhotonEnergy, FastComponent, nEntries);
+myMPT1->AddProperty("RINDEX", PhotonEnergy, RefractiveIndex, nEntries);
+myMPT1->AddProperty("ABSLENGTH", PhotonEnergy, AbsorptionLength, nEntries);
+myMPT1->AddConstProperty("SCINTILLATIONYIELD", 10000./MeV);
+myMPT1->AddConstProperty("RESOLUTIONSCALE", 1.0);
+myMPT1->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 2.1*ns); // Fast decay time
+myMPT1->AddConstProperty("SCINTILLATIONYIELD1", 1.);
+//myMPT1->AddConstProperty("YIELDRATIO", 1.0); // No slow component
+}
   material->SetMaterialPropertiesTable(myMPT1);
   /*
   ** Below line is most important which finally adds the material
   ** to Material map, so that the optical Plastic scintillator can
   ** be directly utilized
   */
-  fMaterialMap["ICNSE_PS"] = material;
+  //fMaterialMap["ICNSE_PS"] = material;
+  /*
+  ** Taking this line inside Create scintillator material, so that we
+  ** we can simply stop optical photon generator without changing material
+  ** of scintillator
+  */
 }
 #endif
 
@@ -204,12 +257,12 @@ G4Material *Materials::FindOrBuildMaterial(G4String material) {
     return mat;
   } else {
     if (fMaterialMap.find(material) != fMaterialMap.end()) {
-      std::cout << "Material Found : " << fMaterialMap[material] << std::endl;
+      std::cout << "RAMANN : Material Found : " << fMaterialMap[material] << std::endl;
       // AttachAirOpticalProperties(fMaterialMap[material]);
 
       return fMaterialMap[material];
     } else {
-      std::cout << "Material Not Found ..." << std::endl;
+      std::cout << "SEHGALL : Material Not Found ..." << std::endl;
       return nullptr;
     }
   }
@@ -227,7 +280,7 @@ void Materials::AttachAirOpticalProperties(G4Material *material) {
                                   1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.};
 
   G4MaterialPropertiesTable *Air_MPT = new G4MaterialPropertiesTable();
-  Air_MPT->AddProperty("RINDEX", photonEnergy, refAir)->SetSpline(true);
+  Air_MPT->AddProperty("RINDEX", photonEnergy, refAir,photonEnergy.size());//->SetSpline(true);
   material->SetMaterialPropertiesTable(Air_MPT);
 }
 #endif

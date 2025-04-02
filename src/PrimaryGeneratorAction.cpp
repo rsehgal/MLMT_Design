@@ -85,7 +85,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 #else
 
   fParticleGun->SetParticleEnergy(2*GeV);
-#define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
   //endPoint.set(randX2,yPosVec[0]-100,randZ2);
   endPoint.setX(randX2);

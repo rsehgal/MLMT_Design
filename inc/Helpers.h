@@ -20,4 +20,5 @@ extern void DrawPoint(const G4ThreeVector& position);
 
 extern double ComputePathLength(double d, double theta_in, double theta_out);
 extern double EstimateMomentum(double theta_scatt, double L);
+extern double EstimateMomentum(double theta_scatt, double L=20, double Z=82,  double X0=5.6);
 #endif

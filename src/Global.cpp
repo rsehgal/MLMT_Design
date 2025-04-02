@@ -9,7 +9,7 @@ std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * c
 //std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
 
 //This must be defined to a value above topmost plane.
-double gunPos = 100*cm;
+double gunPos = 110*cm;
 
 //The lowermost value used to generated random direction, if not using CRY
 //This value should be less than bottom-most plane
@@ -30,14 +30,14 @@ void InitializeHitPointVec() {
 std::vector<G4ThreeVector> vecOfPts;
 
 
+double scintHalfy = 0.5*cm;
+
 //double scintHalfx = 3.125*cm;//0.5*cm;
-//double scintHalfy = 0.5*cm;
 //double scintHalfz = 52*cm ;
 //unsigned int numOfScintillators = 16;
 //unsigned int numOfGroups = 4;
 
 double scintHalfx = 0.5*cm;//0.5*cm;
-double scintHalfy = 0.5*cm;
 double scintHalfz = 56.2*cm ;
 unsigned int numOfScintillators = 100;
 unsigned int numOfGroups = 10;
