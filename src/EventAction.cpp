@@ -229,6 +229,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(4, 45, poca.x());
         analMan->FillNtupleDColumn(4, 46, poca.y());
         analMan->FillNtupleDColumn(4, 47, poca.z());
+        analMan->FillNtupleDColumn(4, 48, dev);
         analMan->AddNtupleRow(4);
 #endif
       

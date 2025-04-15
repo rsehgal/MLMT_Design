@@ -145,9 +145,10 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("myMomentum");
   analMan->CreateNtupleDColumn("g4Momentum");
   analMan->CreateNtupleDColumn("eventNum");
-  analMan->CreateNtupleDColumn("reconsX");
-  analMan->CreateNtupleDColumn("reconsY");
-  analMan->CreateNtupleDColumn("reconsZ");
+  analMan->CreateNtupleDColumn("x");
+  analMan->CreateNtupleDColumn("y");
+  analMan->CreateNtupleDColumn("z");
+  analMan->CreateNtupleDColumn("dev");
   analMan->FinishNtuple();
 #endif
 
