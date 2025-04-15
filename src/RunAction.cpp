@@ -107,6 +107,37 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("x4");
   analMan->CreateNtupleDColumn("y4");
   analMan->CreateNtupleDColumn("z4");
+
+  analMan->CreateNtupleDColumn("x1Randomize");
+  analMan->CreateNtupleDColumn("y1Randomize");
+  analMan->CreateNtupleDColumn("z1Randomize");
+  analMan->CreateNtupleDColumn("x2Randomize");
+  analMan->CreateNtupleDColumn("y2Randomize");
+  analMan->CreateNtupleDColumn("z2Randomize");
+  analMan->CreateNtupleDColumn("x3Randomize");
+  analMan->CreateNtupleDColumn("y3Randomize");
+  analMan->CreateNtupleDColumn("z3Randomize");
+  analMan->CreateNtupleDColumn("x4Randomize");
+  analMan->CreateNtupleDColumn("y4Randomize");
+  analMan->CreateNtupleDColumn("z4Randomize");
+  analMan->CreateNtupleDColumn("devRandomize");
+
+  analMan->CreateNtupleDColumn("x1Exact");
+  analMan->CreateNtupleDColumn("y1Exact");
+  analMan->CreateNtupleDColumn("z1Exact");
+  analMan->CreateNtupleDColumn("x2Exact");
+  analMan->CreateNtupleDColumn("y2Exact");
+  analMan->CreateNtupleDColumn("z2Exact");
+  analMan->CreateNtupleDColumn("x3Exact");
+  analMan->CreateNtupleDColumn("y3Exact");
+  analMan->CreateNtupleDColumn("z3Exact");
+  analMan->CreateNtupleDColumn("x4Exact");
+  analMan->CreateNtupleDColumn("y4Exact");
+  analMan->CreateNtupleDColumn("z4Exact");
+  analMan->CreateNtupleDColumn("devExact");
+
+
+
   analMan->CreateNtupleDColumn("pathLength");
   analMan->CreateNtupleDColumn("angleIncoming");
   analMan->CreateNtupleDColumn("angleOutgoing");
@@ -114,6 +145,9 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->CreateNtupleDColumn("myMomentum");
   analMan->CreateNtupleDColumn("g4Momentum");
   analMan->CreateNtupleDColumn("eventNum");
+  analMan->CreateNtupleDColumn("reconsX");
+  analMan->CreateNtupleDColumn("reconsY");
+  analMan->CreateNtupleDColumn("reconsZ");
   analMan->FinishNtuple();
 #endif
 

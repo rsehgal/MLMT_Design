@@ -37,6 +37,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
   // Scint_Hit *hit = new Scint_Hit;
   // Hitt *ht = new Hitt;
   const G4StepPoint *preStepPoint = step->GetPreStepPoint();
+  const G4ThreeVector exactHit = preStepPoint->GetPosition();
 
   G4Track *track        = step->GetTrack();
   G4String particleName = track->GetDefinition()->GetParticleName();
@@ -116,7 +117,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
       }
       // Muon_Hit *hit = new Muon_Hit(layerNum, subLayerNum, stripNum, maskNum);
       // fMuonHitCollection->insert(hit);
-      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, track->GetMomentum(),maskNum,tme ));
+      fMuonHitCollection->insert(new Muon_Hit(layerNum, subLayerNum, stripNum, track->GetMomentum(),exactHit,maskNum,tme ));
       /*hit->Print();
       delete hit;*/
     }

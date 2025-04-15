@@ -25,6 +25,8 @@ extern std::map<int,G4ThreeVector> hitPointVec;
 extern std::map<int,G4ThreeVector> momentumVec;
 extern std::map<int,G4ThreeVector> stripNumVec;
 
+extern std::map<int,G4ThreeVector> exactHitPointVec;
+extern std::map<int,G4ThreeVector> randomizeHitPointVec;
 
 extern void InitializeHitPointVec();
 

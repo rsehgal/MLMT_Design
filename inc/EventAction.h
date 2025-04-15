@@ -9,10 +9,17 @@
 #include "G4UserEventAction.hh"
 #include "G4Event.hh"
 #include "Track.h"
+#include "TRandom3.h"
+
 class EventAction : public G4UserEventAction {
   Track fIncomingTrack;
   Track fOutgoingTrack;
   Track fMomentumTrack;
+  Track fOutgoingTrackRandomize;
+  Track fMomentumTrackRandomize;
+  Track fOutgoingTrackExact;
+  Track fMomentumTrackExact;
+  TRandom3 fRng;
 
 public:
   EventAction();

@@ -6,10 +6,13 @@
 #include "G4SystemOfUnits.hh"
 #include "Global.h"
 std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm, 50 * cm, 80. * cm};
+//std::vector<double> yPosVec = {-140 * cm, -110 * cm, -80. * cm, -50 * cm};//, 50 * cm, 80. * cm};
 //std::vector<double> yPosVec = {-100. * cm, -50 * cm, 50 * cm, 100. * cm};
 
 //This must be defined to a value above topmost plane.
-double gunPos = 110*cm;
+//double gunPos = 110*cm;
+double gunPos = 90*cm;
+//double gunPos = -40*cm;
 
 //The lowermost value used to generated random direction, if not using CRY
 //This value should be less than bottom-most plane
@@ -19,9 +22,14 @@ std::map<int, G4ThreeVector> hitPointVec;
 std::map<int, G4ThreeVector> momentumVec;
 std::map<int, G4ThreeVector> stripNumVec;
 
+std::map<int, G4ThreeVector> exactHitPointVec;
+std::map<int, G4ThreeVector> randomizeHitPointVec;
+
 void InitializeHitPointVec() {
   for (unsigned int i = 0; i < yPosVec.size(); i++) {
     hitPointVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
+    exactHitPointVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
+    randomizeHitPointVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
     momentumVec[i] = G4ThreeVector(0.,0.,0.);
     stripNumVec[i] = G4ThreeVector(-50000., yPosVec[i], -50000.);
   }

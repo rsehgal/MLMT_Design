@@ -16,9 +16,12 @@ public:
   int fMaskNum;
   unsigned long long fTime;
   G4ThreeVector fMomentum;
+  G4ThreeVector fExactHit;
 public:
   Muon_Hit();
   Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momentum, int maskNum = -1,unsigned long long tme=0);
+  Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momentum,G4ThreeVector exactHit, int maskNum = -1,unsigned long long tme=0);
+
   virtual ~Muon_Hit();
   int GetChannelNum(int n=10);
   double GetStripCenter();

@@ -15,6 +15,11 @@ Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momen
 {
 }
 
+Muon_Hit::Muon_Hit(int layerNum, int planeNum, int stripNum, G4ThreeVector momentum,G4ThreeVector exactHit, int maskNum, unsigned long long tme)
+    : fLayerNum(layerNum), fPlaneNum(planeNum), fStripNum(stripNum), fMomentum(momentum),fExactHit(exactHit), fMaskNum(maskNum), fTime(tme)
+{
+}
+
 Muon_Hit::~Muon_Hit() {}
 
 void Muon_Hit::Print()
