@@ -1,7 +1,7 @@
 {
   gStyle->SetPalette(kRainbow);
   TFile *fp       = new TFile("out.root", "r");
-  TTree *pocaTree = (TTree *)fp->Get("pocaTree");
+  TTree *pocaTree = (TTree *)fp->Get("mlData");
   // Declaration of leaves types
   Double_t x;
   Double_t y;
@@ -10,10 +10,10 @@
   Double_t eventNum;
 
   // Set branch addresses.
-  pocaTree->SetBranchAddress("x", &x);
-  pocaTree->SetBranchAddress("y", &y);
-  pocaTree->SetBranchAddress("z", &z);
-  pocaTree->SetBranchAddress("dev", &dev);
+  pocaTree->SetBranchAddress("pocaXExact", &x);
+  pocaTree->SetBranchAddress("pocaYExact", &y);
+  pocaTree->SetBranchAddress("pocaZExact", &z);
+  pocaTree->SetBranchAddress("devTargetExact", &dev);
   pocaTree->SetBranchAddress("eventNum", &eventNum);
 
   //     This is the loop skeleton
@@ -33,7 +33,7 @@
   TH2F *histyz = new TH2F("pocaYZ", "pocaYZ", 1200, -600, 600, 1200, -600, 600);
   for (Long64_t i = 0; i < nentries; i++) {
     nbytes += pocaTree->GetEntry(i);
-    if (dev > 0.08) {
+    if (dev > 0.01) {
       histxz->Fill(x, z);
       histxy->Fill(x, y);
       histyz->Fill(y, z);

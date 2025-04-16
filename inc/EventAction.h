@@ -13,11 +13,13 @@
 
 class EventAction : public G4UserEventAction {
   Track fIncomingTrack;
+  Track fIncomingTrackRandomize;
+  Track fIncomingTrackExact;
   Track fOutgoingTrack;
-  Track fMomentumTrack;
   Track fOutgoingTrackRandomize;
-  Track fMomentumTrackRandomize;
   Track fOutgoingTrackExact;
+  Track fMomentumTrack;
+  Track fMomentumTrackRandomize;
   Track fMomentumTrackExact;
   TRandom3 fRng;
 

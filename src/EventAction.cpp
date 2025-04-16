@@ -54,28 +54,27 @@ void EventAction::EndOfEventAction(const G4Event *event)
     analMan->FillNtupleDColumn(1, 3, hitStrip->fMaskNum);
     analMan->FillNtupleDColumn(1, 4, hitStrip->GetChannelNum());
     analMan->FillNtupleDColumn(1, 6, yPosVec[hitStrip->fLayerNum]);
-    if(hitStrip->fMaskNum >=0 && hitStrip->fStripNum >=0){
-    if (hitStrip->fPlaneNum == 0) {
-      analMan->FillNtupleDColumn(1, 5, hitStrip->GetStripCenter());
-      double stripCenter = hitStrip->GetStripCenter();
-      double randomHit = fRng.Uniform(stripCenter-scintHalfx,stripCenter+scintHalfx);
-      hitPointVec[hitStrip->fLayerNum].setX(stripCenter);
-      exactHitPointVec[hitStrip->fLayerNum].setX(hitStrip->fExactHit.x());
-      randomizeHitPointVec[hitStrip->fLayerNum].setX(randomHit);
-      stripNumVec[hitStrip->fLayerNum].setX(hitStrip->fMaskNum*numOfGroups + hitStrip->fStripNum);
-    } else {
-      analMan->FillNtupleDColumn(1, 7, hitStrip->GetStripCenter());
-      double stripCenter = hitStrip->GetStripCenter();
-      double randomHit = fRng.Uniform(stripCenter-scintHalfx,stripCenter+scintHalfx);
-      hitPointVec[hitStrip->fLayerNum].setZ(stripCenter);
-      exactHitPointVec[hitStrip->fLayerNum].setZ(hitStrip->fExactHit.z());
-      randomizeHitPointVec[hitStrip->fLayerNum].setZ(randomHit);
-      stripNumVec[hitStrip->fLayerNum].setZ(hitStrip->fMaskNum*numOfGroups + hitStrip->fStripNum);
-    }
-    momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
-    analMan->FillNtupleDColumn(1, 8, event->GetEventID());
-    analMan->AddNtupleRow(1);
-
+    if (hitStrip->fMaskNum >= 0 && hitStrip->fStripNum >= 0) {
+      if (hitStrip->fPlaneNum == 0) {
+        analMan->FillNtupleDColumn(1, 5, hitStrip->GetStripCenter());
+        double stripCenter = hitStrip->GetStripCenter();
+        double randomHit   = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
+        hitPointVec[hitStrip->fLayerNum].setX(stripCenter);
+        exactHitPointVec[hitStrip->fLayerNum].setX(hitStrip->fExactHit.x());
+        randomizeHitPointVec[hitStrip->fLayerNum].setX(randomHit);
+        stripNumVec[hitStrip->fLayerNum].setX(hitStrip->fMaskNum * numOfGroups + hitStrip->fStripNum);
+      } else {
+        analMan->FillNtupleDColumn(1, 7, hitStrip->GetStripCenter());
+        double stripCenter = hitStrip->GetStripCenter();
+        double randomHit   = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
+        hitPointVec[hitStrip->fLayerNum].setZ(stripCenter);
+        exactHitPointVec[hitStrip->fLayerNum].setZ(hitStrip->fExactHit.z());
+        randomizeHitPointVec[hitStrip->fLayerNum].setZ(randomHit);
+        stripNumVec[hitStrip->fLayerNum].setZ(hitStrip->fMaskNum * numOfGroups + hitStrip->fStripNum);
+      }
+      momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
+      analMan->FillNtupleDColumn(1, 8, event->GetEventID());
+      analMan->AddNtupleRow(1);
     }
   }
 
@@ -96,8 +95,14 @@ void EventAction::EndOfEventAction(const G4Event *event)
   if (hitInAllLayers) {
     // Resetting previously set tracks
     fIncomingTrack.Reset();
+    fIncomingTrackRandomize.Reset();
+    fIncomingTrackExact.Reset();
     fOutgoingTrack.Reset();
+    fOutgoingTrackRandomize.Reset();
+    fOutgoingTrackExact.Reset();
     fMomentumTrack.Reset();
+    fMomentumTrackRandomize.Reset();
+    fMomentumTrackExact.Reset();
 
     for (int i = hitPointVec.size() - 1; i >= 0; i--) {
       analMan->FillNtupleDColumn(2, 0, i);
@@ -121,12 +126,15 @@ void EventAction::EndOfEventAction(const G4Event *event)
     fMomentumTrack.SetP1(hitPointVec[1]);
     fMomentumTrack.SetP2(hitPointVec[0]);
 
+    fIncomingTrackRandomize.SetP1(randomizeHitPointVec[5]);
+    fIncomingTrackRandomize.SetP2(randomizeHitPointVec[4]);
     fOutgoingTrackRandomize.SetP1(randomizeHitPointVec[3]);
     fOutgoingTrackRandomize.SetP2(randomizeHitPointVec[2]);
     fMomentumTrackRandomize.SetP1(randomizeHitPointVec[1]);
     fMomentumTrackRandomize.SetP2(randomizeHitPointVec[0]);
 
-
+    fIncomingTrackExact.SetP1(exactHitPointVec[5]);
+    fIncomingTrackExact.SetP2(exactHitPointVec[4]);
     fOutgoingTrackExact.SetP1(exactHitPointVec[3]);
     fOutgoingTrackExact.SetP2(exactHitPointVec[2]);
     fMomentumTrackExact.SetP1(exactHitPointVec[1]);
@@ -135,30 +143,40 @@ void EventAction::EndOfEventAction(const G4Event *event)
     /*std::cout << "--------------------------------------" << std::endl;
     fIncomingTrack.Print();
     fOutgoingTrack.Print();*/
-    double dev         = fIncomingTrack.Angle(fOutgoingTrack);
-    double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
-    double devRandomize = fOutgoingTrackRandomize.Angle(fMomentumTrackRandomize);
-    double devExact = fOutgoingTrackExact.Angle(fMomentumTrackExact);
-   
-    // Momentum calculation using Scattering method
-    double momentum       = 92.7 / devMomentum;
+
+    /*
+     double dev         = fIncomingTrack.Angle(fOutgoingTrack);
+     double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
+     double devRandomize = fOutgoingTrackRandomize.Angle(fMomentumTrackRandomize);
+     double devExact = fOutgoingTrackExact.Angle(fMomentumTrackExact);
+
+     // Momentum calculation using Scattering method
+     double momentum       = 92.7 / devMomentum;
+     double g4CalcMomentum = momentumVec[0].mag();*/
+
     double g4CalcMomentum = momentumVec[0].mag();
+    double devTarget   = 0;
+    double devMomentum = 0;
+    double pathLength  = 0;
+    double myMomentum  = 0;
+    G4ThreeVector poca(-50000., -50000., -50000.);
 
     // if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01)
     {
-      G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
-      // std::cout << "POCA : " << poca << std::endl;
 
-      double L_1 = (fOutgoingTrack.GetP2()-fMomentumTrack.GetP1()).mag()/10.;
-      //20 is directly in cm
-      double L_2 = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
-
-      // Estimate momentum
-      //double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
-      double momentum_pl = EstimateMomentum(devMomentum);//, L_1)*1000.;
-
-      //if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z())) 
+      // if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z()))
       {
+        double dev         = fIncomingTrack.Angle(fOutgoingTrack);
+        G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
+        double L_1         = (fOutgoingTrack.GetP2() - fMomentumTrack.GetP1()).mag() / 10.;
+        double L_2         = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
+        double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
+        double momentum    = 92.7 / devMomentum;
+
+        // Estimate momentum
+        // double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
+        double momentum_pl = EstimateMomentum(devMomentum); //, L_1)*1000.;
+
         analMan->FillNtupleDColumn(3, 0, poca.x());
         analMan->FillNtupleDColumn(3, 1, poca.y());
         analMan->FillNtupleDColumn(3, 2, poca.z());
@@ -173,66 +191,114 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(3, 11, g4CalcMomentum);
         analMan->FillNtupleDColumn(3, 12, event->GetEventID());
         analMan->AddNtupleRow(3);
-
-	}
+      }
 
 #ifdef ML_TREE
-        analMan->FillNtupleDColumn(4, 0, fOutgoingTrack.GetP1().x());
-        analMan->FillNtupleDColumn(4, 1, fOutgoingTrack.GetP1().y());
-        analMan->FillNtupleDColumn(4, 2, fOutgoingTrack.GetP1().z());
-	analMan->FillNtupleDColumn(4, 3, fOutgoingTrack.GetP2().x());
-        analMan->FillNtupleDColumn(4, 4, fOutgoingTrack.GetP2().y());
-        analMan->FillNtupleDColumn(4, 5, fOutgoingTrack.GetP2().z());
-	analMan->FillNtupleDColumn(4, 6, fMomentumTrack.GetP1().x());
-        analMan->FillNtupleDColumn(4, 7, fMomentumTrack.GetP1().y());
-        analMan->FillNtupleDColumn(4, 8, fMomentumTrack.GetP1().z());
-	analMan->FillNtupleDColumn(4, 9, fMomentumTrack.GetP2().x());
-        analMan->FillNtupleDColumn(4, 10, fMomentumTrack.GetP2().y());
-        analMan->FillNtupleDColumn(4, 11, fMomentumTrack.GetP2().z());
 
-        analMan->FillNtupleDColumn(4, 12,  fOutgoingTrackRandomize.GetP1().x());
-        analMan->FillNtupleDColumn(4, 13,  fOutgoingTrackRandomize.GetP1().y());
-        analMan->FillNtupleDColumn(4, 14,  fOutgoingTrackRandomize.GetP1().z());
-	analMan->FillNtupleDColumn(4, 15,  fOutgoingTrackRandomize.GetP2().x());
-        analMan->FillNtupleDColumn(4, 16,  fOutgoingTrackRandomize.GetP2().y());
-        analMan->FillNtupleDColumn(4, 17,  fOutgoingTrackRandomize.GetP2().z());
-	analMan->FillNtupleDColumn(4, 18,  fMomentumTrackRandomize.GetP1().x());
-        analMan->FillNtupleDColumn(4, 19,  fMomentumTrackRandomize.GetP1().y());
-        analMan->FillNtupleDColumn(4, 20,  fMomentumTrackRandomize.GetP1().z());
-	analMan->FillNtupleDColumn(4, 21,  fMomentumTrackRandomize.GetP2().x());
-        analMan->FillNtupleDColumn(4, 22, fMomentumTrackRandomize.GetP2().y());
-        analMan->FillNtupleDColumn(4, 23, fMomentumTrackRandomize.GetP2().z());
-        analMan->FillNtupleDColumn(4, 24, devRandomize);
+      {
+        devTarget       = fIncomingTrack.Angle(fOutgoingTrack);
+        devMomentum     = fOutgoingTrack.Angle(fMomentumTrack);
+        pathLength      = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
+        double momentum = 92.7 / devMomentum;
+        poca            = POCA(fIncomingTrack, fOutgoingTrack);
 
-        analMan->FillNtupleDColumn(4, 25,  fOutgoingTrackExact.GetP1().x());
-        analMan->FillNtupleDColumn(4, 26,  fOutgoingTrackExact.GetP1().y());
-        analMan->FillNtupleDColumn(4, 27,  fOutgoingTrackExact.GetP1().z());
-	analMan->FillNtupleDColumn(4, 28,  fOutgoingTrackExact.GetP2().x());
-        analMan->FillNtupleDColumn(4, 29,  fOutgoingTrackExact.GetP2().y());
-        analMan->FillNtupleDColumn(4, 30,  fOutgoingTrackExact.GetP2().z());
-	analMan->FillNtupleDColumn(4, 31,  fMomentumTrackExact.GetP1().x());
-        analMan->FillNtupleDColumn(4, 32,  fMomentumTrackExact.GetP1().y());
-        analMan->FillNtupleDColumn(4, 33,  fMomentumTrackExact.GetP1().z());
-	analMan->FillNtupleDColumn(4, 34,  fMomentumTrackExact.GetP2().x());
-        analMan->FillNtupleDColumn(4, 35, fMomentumTrackExact.GetP2().y());
-        analMan->FillNtupleDColumn(4, 36, fMomentumTrackExact.GetP2().z());
-        analMan->FillNtupleDColumn(4, 37, devExact);
+        analMan->FillNtupleDColumn(4, 0, fIncomingTrack.GetP1().x());
+        analMan->FillNtupleDColumn(4, 1, fIncomingTrack.GetP1().y());
+        analMan->FillNtupleDColumn(4, 2, fIncomingTrack.GetP1().z());
+        analMan->FillNtupleDColumn(4, 3, fIncomingTrack.GetP2().x());
+        analMan->FillNtupleDColumn(4, 4, fIncomingTrack.GetP2().y());
+        analMan->FillNtupleDColumn(4, 5, fIncomingTrack.GetP2().z());
+        analMan->FillNtupleDColumn(4, 6, fOutgoingTrack.GetP1().x());
+        analMan->FillNtupleDColumn(4, 7, fOutgoingTrack.GetP1().y());
+        analMan->FillNtupleDColumn(4, 8, fOutgoingTrack.GetP1().z());
+        analMan->FillNtupleDColumn(4, 9, fOutgoingTrack.GetP2().x());
+        analMan->FillNtupleDColumn(4, 10, fOutgoingTrack.GetP2().y());
+        analMan->FillNtupleDColumn(4, 11, fOutgoingTrack.GetP2().z());
+        analMan->FillNtupleDColumn(4, 12, fMomentumTrack.GetP1().x());
+        analMan->FillNtupleDColumn(4, 13, fMomentumTrack.GetP1().y());
+        analMan->FillNtupleDColumn(4, 14, fMomentumTrack.GetP1().z());
+        analMan->FillNtupleDColumn(4, 15, fMomentumTrack.GetP2().x());
+        analMan->FillNtupleDColumn(4, 16, fMomentumTrack.GetP2().y());
+        analMan->FillNtupleDColumn(4, 17, fMomentumTrack.GetP2().z());
+        analMan->FillNtupleDColumn(4, 18, devTarget);
+        analMan->FillNtupleDColumn(4, 19, devMomentum);
+        analMan->FillNtupleDColumn(4, 20, pathLength);
+        analMan->FillNtupleDColumn(4, 21, momentum);
+        analMan->FillNtupleDColumn(4, 22, poca.x());
+        analMan->FillNtupleDColumn(4, 23, poca.y());
+        analMan->FillNtupleDColumn(4, 24, poca.z());
+      }
 
+      {
+        devTarget   = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
+        devMomentum = fOutgoingTrackRandomize.Angle(fMomentumTrackRandomize);
+        pathLength =
+            ComputePathLength(20, fOutgoingTrackRandomize.GetZenithAngle(), fMomentumTrackRandomize.GetZenithAngle());
+        double momentum = 92.7 / devMomentum;
+        poca            = POCA(fIncomingTrackRandomize, fOutgoingTrackRandomize);
+        analMan->FillNtupleDColumn(4, 25, fIncomingTrackRandomize.GetP1().x());
+        analMan->FillNtupleDColumn(4, 26, fIncomingTrackRandomize.GetP1().y());
+        analMan->FillNtupleDColumn(4, 27, fIncomingTrackRandomize.GetP1().z());
+        analMan->FillNtupleDColumn(4, 28, fIncomingTrackRandomize.GetP2().x());
+        analMan->FillNtupleDColumn(4, 29, fIncomingTrackRandomize.GetP2().y());
+        analMan->FillNtupleDColumn(4, 30, fIncomingTrackRandomize.GetP2().z());
+        analMan->FillNtupleDColumn(4, 31, fOutgoingTrackRandomize.GetP1().x());
+        analMan->FillNtupleDColumn(4, 32, fOutgoingTrackRandomize.GetP1().y());
+        analMan->FillNtupleDColumn(4, 33, fOutgoingTrackRandomize.GetP1().z());
+        analMan->FillNtupleDColumn(4, 34, fOutgoingTrackRandomize.GetP2().x());
+        analMan->FillNtupleDColumn(4, 35, fOutgoingTrackRandomize.GetP2().y());
+        analMan->FillNtupleDColumn(4, 36, fOutgoingTrackRandomize.GetP2().z());
+        analMan->FillNtupleDColumn(4, 37, fMomentumTrackRandomize.GetP1().x());
+        analMan->FillNtupleDColumn(4, 38, fMomentumTrackRandomize.GetP1().y());
+        analMan->FillNtupleDColumn(4, 39, fMomentumTrackRandomize.GetP1().z());
+        analMan->FillNtupleDColumn(4, 40, fMomentumTrackRandomize.GetP2().x());
+        analMan->FillNtupleDColumn(4, 41, fMomentumTrackRandomize.GetP2().y());
+        analMan->FillNtupleDColumn(4, 42, fMomentumTrackRandomize.GetP2().z());
+        analMan->FillNtupleDColumn(4, 43, devTarget);
+        analMan->FillNtupleDColumn(4, 44, devMomentum);
+        analMan->FillNtupleDColumn(4, 45, pathLength);
+        analMan->FillNtupleDColumn(4, 46, momentum);
+        analMan->FillNtupleDColumn(4, 47, poca.x());
+        analMan->FillNtupleDColumn(4, 48, poca.y());
+        analMan->FillNtupleDColumn(4, 49, poca.z());
+      }
 
-        analMan->FillNtupleDColumn(4, 38, L_2);
-        analMan->FillNtupleDColumn(4, 39, fOutgoingTrack.GetZenithAngle());
-        analMan->FillNtupleDColumn(4, 40, fMomentumTrack.GetZenithAngle());
-        analMan->FillNtupleDColumn(4, 41, devMomentum);
-        analMan->FillNtupleDColumn(4, 42, momentum);
-        analMan->FillNtupleDColumn(4, 43, g4CalcMomentum);
-        analMan->FillNtupleDColumn(4, 44, event->GetEventID());
-        analMan->FillNtupleDColumn(4, 45, poca.x());
-        analMan->FillNtupleDColumn(4, 46, poca.y());
-        analMan->FillNtupleDColumn(4, 47, poca.z());
-        analMan->FillNtupleDColumn(4, 48, dev);
-        analMan->AddNtupleRow(4);
+      {
+        devTarget   = fIncomingTrackExact.Angle(fOutgoingTrackExact);
+        devMomentum = fOutgoingTrackExact.Angle(fMomentumTrackExact);
+        pathLength  = ComputePathLength(20, fOutgoingTrackExact.GetZenithAngle(), fMomentumTrackExact.GetZenithAngle());
+        double momentum = 92.7 / devMomentum;
+        poca            = POCA(fIncomingTrackExact, fOutgoingTrackExact);
+        analMan->FillNtupleDColumn(4, 50, fIncomingTrackExact.GetP1().x());
+        analMan->FillNtupleDColumn(4, 51, fIncomingTrackExact.GetP1().y());
+        analMan->FillNtupleDColumn(4, 52, fIncomingTrackExact.GetP1().z());
+        analMan->FillNtupleDColumn(4, 53, fIncomingTrackExact.GetP2().x());
+        analMan->FillNtupleDColumn(4, 54, fIncomingTrackExact.GetP2().y());
+        analMan->FillNtupleDColumn(4, 55, fIncomingTrackExact.GetP2().z());
+        analMan->FillNtupleDColumn(4, 56, fOutgoingTrackExact.GetP1().x());
+        analMan->FillNtupleDColumn(4, 57, fOutgoingTrackExact.GetP1().y());
+        analMan->FillNtupleDColumn(4, 58, fOutgoingTrackExact.GetP1().z());
+        analMan->FillNtupleDColumn(4, 59, fOutgoingTrackExact.GetP2().x());
+        analMan->FillNtupleDColumn(4, 60, fOutgoingTrackExact.GetP2().y());
+        analMan->FillNtupleDColumn(4, 61, fOutgoingTrackExact.GetP2().z());
+        analMan->FillNtupleDColumn(4, 62, fMomentumTrackExact.GetP1().x());
+        analMan->FillNtupleDColumn(4, 63, fMomentumTrackExact.GetP1().y());
+        analMan->FillNtupleDColumn(4, 64, fMomentumTrackExact.GetP1().z());
+        analMan->FillNtupleDColumn(4, 65, fMomentumTrackExact.GetP2().x());
+        analMan->FillNtupleDColumn(4, 66, fMomentumTrackExact.GetP2().y());
+        analMan->FillNtupleDColumn(4, 67, fMomentumTrackExact.GetP2().z());
+        analMan->FillNtupleDColumn(4, 68, devTarget);
+        analMan->FillNtupleDColumn(4, 69, devMomentum);
+        analMan->FillNtupleDColumn(4, 70, pathLength);
+        analMan->FillNtupleDColumn(4, 71, momentum);
+        analMan->FillNtupleDColumn(4, 72, poca.x());
+        analMan->FillNtupleDColumn(4, 73, poca.y());
+        analMan->FillNtupleDColumn(4, 74, poca.z());
+      }
+        analMan->FillNtupleDColumn(4, 75, g4CalcMomentum);
+        analMan->FillNtupleDColumn(4, 76, event->GetEventID());
+      analMan->AddNtupleRow(4);
 #endif
-      
     }
   }
   /* std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
