@@ -42,6 +42,16 @@ void EventAction::EndOfEventAction(const G4Event *event)
   G4int maskHCID = G4SDManager::GetSDMpointer()->GetCollectionID("MaskingScintillatorCrystal_MuonHits");
   MuonHitCollection *muonHitcollectionMask = static_cast<MuonHitCollection *>(hce->GetHC(maskHCID));
 
+  G4int pocaHCID                       = G4SDManager::GetSDMpointer()->GetCollectionID("PoCAHitCollection");
+  PoCAHitCollection *pocaHitcollection = static_cast<PoCAHitCollection *>(hce->GetHC(pocaHCID));
+
+  // Printing PoCA Hit Collection
+  /*
+  for (unsigned int i = 0; i < pocaHitcollection->entries(); i++) {
+    (*pocaHitcollection)[i]->Print();
+  }
+  */
+
   // std::cout << "======================================" << std::endl;
   // std::cout << "Strip Hit collection size : " << muonHitCollStripSize << std::endl;
   for (unsigned int i = 0; i < muonHitCollectionStrip->entries(); i++) {
@@ -80,9 +90,11 @@ void EventAction::EndOfEventAction(const G4Event *event)
 
   // std::cout << "HitPointVec Size : " << hitPointVec.size() << std::endl;
 
-  /*for(int i = hitPointVec.size()-1; i >= 0 ; i--){
+  /*
+  for(int i = hitPointVec.size()-1; i >= 0 ; i--){
   std::cout << "RAMAN : " << hitPointVec[i] << std::endl;
-  }*/
+  }
+  */
 
   bool hitInAllLayers = true;
 
@@ -140,6 +152,50 @@ void EventAction::EndOfEventAction(const G4Event *event)
     fMomentumTrackExact.SetP1(exactHitPointVec[1]);
     fMomentumTrackExact.SetP2(exactHitPointVec[0]);
 
+#ifdef ML_TREE
+    // TODO : Logic to detect ground truth PoCA from PoCA Hit Collection
+    G4ThreeVector groundTruthPoCA(-50000., -50000., -50000.);
+    double maxAngle = 0.;
+
+    G4ThreeVector pIn  = fIncomingTrack.GetP1();
+    G4ThreeVector dIn  = fIncomingTrack.GetDirCosine();
+    G4ThreeVector pOut = fOutgoingTrack.GetP1();
+    G4ThreeVector dOut = fOutgoingTrack.GetDirCosine();
+
+    if (pocaHitcollection) {
+      for (unsigned int s = 0; s < pocaHitcollection->entries(); s++) {
+        //(*pocaHitcollection)[i]->Print();
+        G4ThreeVector stepDir = (*pocaHitcollection)[s]->fStepDirection;
+
+        double angle = stepDir.angle(fIncomingTrack.GetDirCosine());
+        if (angle > maxAngle) {
+          maxAngle        = angle;
+          groundTruthPoCA = (*pocaHitcollection)[s]->fStepPosition;
+        }
+      }
+    }
+    // std::cout << "Ground Truth PoCA : " << groundTruthPoCA << std::endl;
+    analMan->FillNtupleDColumn(5, 0, pIn.x());
+    analMan->FillNtupleDColumn(5, 1, pIn.y());
+    analMan->FillNtupleDColumn(5, 2, pIn.z());
+    analMan->FillNtupleDColumn(5, 3, dIn.x());
+    analMan->FillNtupleDColumn(5, 4, dIn.y());
+    analMan->FillNtupleDColumn(5, 5, dIn.z());
+
+    analMan->FillNtupleDColumn(5, 6, pOut.x());
+    analMan->FillNtupleDColumn(5, 7, pOut.y());
+    analMan->FillNtupleDColumn(5, 8, pOut.z());
+    analMan->FillNtupleDColumn(5, 9, dOut.x());
+    analMan->FillNtupleDColumn(5, 10, dOut.y());
+    analMan->FillNtupleDColumn(5, 11, dOut.z());
+
+    analMan->FillNtupleDColumn(5, 12, groundTruthPoCA.x());
+    analMan->FillNtupleDColumn(5, 13, groundTruthPoCA.y());
+    analMan->FillNtupleDColumn(5, 14, groundTruthPoCA.z());
+    analMan->AddNtupleRow(5);
+#endif
+    //-----------------------------------------------------------------
+
     /*std::cout << "--------------------------------------" << std::endl;
     fIncomingTrack.Print();
     fOutgoingTrack.Print();*/
@@ -155,10 +211,10 @@ void EventAction::EndOfEventAction(const G4Event *event)
      double g4CalcMomentum = momentumVec[0].mag();*/
 
     double g4CalcMomentum = momentumVec[0].mag();
-    double devTarget   = 0;
-    double devMomentum = 0;
-    double pathLength  = 0;
-    double myMomentum  = 0;
+    double devTarget      = 0;
+    double devMomentum    = 0;
+    double pathLength     = 0;
+    double myMomentum     = 0;
     G4ThreeVector poca(-50000., -50000., -50000.);
 
     // if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01)
@@ -295,8 +351,8 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(4, 73, poca.y());
         analMan->FillNtupleDColumn(4, 74, poca.z());
       }
-        analMan->FillNtupleDColumn(4, 75, g4CalcMomentum);
-        analMan->FillNtupleDColumn(4, 76, event->GetEventID());
+      analMan->FillNtupleDColumn(4, 75, g4CalcMomentum);
+      analMan->FillNtupleDColumn(4, 76, event->GetEventID());
       analMan->AddNtupleRow(4);
 #endif
     }

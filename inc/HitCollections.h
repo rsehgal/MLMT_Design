@@ -9,6 +9,8 @@
 #include "G4THitsCollection.hh"
 #include "Scint_Hit.h"
 #include "Muon_Hit.h"
+#include "PoCA_Hit.h"
 using ScintHitCollection = G4THitsCollection<Scint_Hit>;
 using MuonHitCollection = G4THitsCollection<Muon_Hit>;
+using PoCAHitCollection = G4THitsCollection<PoCA_Hit>;
 #endif

@@ -94,6 +94,7 @@ void RunAction::BeginOfRunAction(const G4Run *)
   analMan->FinishNtuple();
 
 #ifdef ML_TREE
+  //Tree ID 4
   analMan->CreateNtuple("mlData", "A TTree with data for ML");
   analMan->CreateNtupleDColumn("x1Center");
   analMan->CreateNtupleDColumn("y1Center");
@@ -184,6 +185,25 @@ void RunAction::BeginOfRunAction(const G4Run *)
 
   analMan->CreateNtupleDColumn("g4Momentum");
   analMan->CreateNtupleDColumn("eventNum");
+  analMan->FinishNtuple();
+
+  //Tree ID 5 
+  analMan->CreateNtuple("groundTruthPoCA","Tree that contain true PoCA from step");
+  analMan->CreateNtupleDColumn("inX");
+  analMan->CreateNtupleDColumn("inY");
+  analMan->CreateNtupleDColumn("inZ");
+  analMan->CreateNtupleDColumn("dInX");
+  analMan->CreateNtupleDColumn("dInY");
+  analMan->CreateNtupleDColumn("dInZ");
+  analMan->CreateNtupleDColumn("outX");
+  analMan->CreateNtupleDColumn("outY");
+  analMan->CreateNtupleDColumn("outZ");
+  analMan->CreateNtupleDColumn("dOutX");
+  analMan->CreateNtupleDColumn("dOutY");
+  analMan->CreateNtupleDColumn("dOutZ");
+  analMan->CreateNtupleDColumn("pocaX");
+  analMan->CreateNtupleDColumn("pocaY");
+  analMan->CreateNtupleDColumn("pocaZ");
   analMan->FinishNtuple();
 #endif
 

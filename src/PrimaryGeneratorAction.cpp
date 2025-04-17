@@ -77,6 +77,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
   endPoint.setY(ybottom);
 
   G4ThreeVector dir;
+//#define MANUAL_FEED
+#ifndef MANUAL_FEED
 
 #ifdef USE_CRY
   Muon *muon                = cryInterface->SampleMuon();
@@ -103,6 +105,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 
   fParticleGun->SetParticlePosition(startPoint);
   fParticleGun->SetParticleMomentumDirection(unitDir);
+#else
 
+#endif
   fParticleGun->GeneratePrimaryVertex(event);
 }
