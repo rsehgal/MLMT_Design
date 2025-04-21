@@ -42,6 +42,11 @@ if(ML_TREE)
 add_definitions(-DML_TREE)
 endif(ML_TREE)
 
+option(USE_EVE "Use EVE visualizer" OFF)
+if(USE_EVE)
+add_definitions(-DUSE_EVE)
+endif(USE_EVE)
+
 option(RANDOM_DIRECTION "Random direction in case CRY is not used " ON)
 if(RANDOM_DIRECTION)
 add_definitions(-DRANDOM_DIRECTION)
@@ -139,8 +144,10 @@ endif()
 add_executable(Test_Track core/Test_Track.cpp ${PROJECT_SOURCE_DIR}/src/Track.cpp ${PROJECT_SOURCE_DIR}/src/Helpers.cpp)
 target_link_libraries(Test_Track ${Geant4_LIBRARIES})
 
+if(USE_EVE)
 add_executable(TestEve core/TestEve.cpp visualizer/EveVisualizer.cpp)
 target_link_libraries(TestEve ${ROOT_LIBRARIES} Eve RGL Gui Gpad Core)
+endif(USE_EVE)
 
 #add_executable(Test_Cry core/Test_Cry.cpp)
 #target_link_libraries(Test_Cry ${ROOT_LIBRARIES} cryInterface)

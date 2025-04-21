@@ -3,46 +3,44 @@
 **	2025-03-05
 **	username : rsehgal
 */
-#include <iostream>
 #include "EventAction.h"
+#include "G4AnalysisManager.hh"
 #include "G4Event.hh"
 #include "G4HCofThisEvent.hh"
-#include "G4SDManager.hh"
-#include "HitCollections.h"
-#include "Muon_Hit.h"
 #include "G4RunManager.hh"
-#include "G4TrackingManager.hh"
+#include "G4SDManager.hh"
 #include "G4Track.hh"
-#include "colors.h"
-#include "G4AnalysisManager.hh"
+#include "G4TrackingManager.hh"
 #include "Global.h"
 #include "Helpers.h"
+#include "HitCollections.h"
+#include "Muon_Hit.h"
+#include "colors.h"
 #include <cmath>
+#include <iostream>
 EventAction::EventAction() {}
 
 EventAction::~EventAction() {}
 
-void EventAction::BeginOfEventAction(const G4Event *event)
-{
+void EventAction::BeginOfEventAction(const G4Event *event) {
   // unsigned long long tme = G4RunManager::GetRunManager()->GetTrackingManager()->GetTrack()->GetGlobalTime();
   // std::cout << RED <<"Global Time at Begin of Event : " << tme << RESET << std::endl;
   InitializeHitPointVec();
   fRng.SetSeed(0.);
 }
 
-void EventAction::EndOfEventAction(const G4Event *event)
-{
+void EventAction::EndOfEventAction(const G4Event *event) {
   G4AnalysisManager *analMan = G4AnalysisManager::Instance();
 
   G4HCofThisEvent *hce = event->GetHCofThisEvent();
-  G4int hcID           = G4SDManager::GetSDMpointer()->GetCollectionID("ScintillatorCrystal_MuonHits");
+  G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID("ScintillatorCrystal_MuonHits");
   MuonHitCollection *muonHitCollectionStrip = static_cast<MuonHitCollection *>(hce->GetHC(hcID));
-  G4int muonHitCollStripSize                = muonHitCollectionStrip->entries();
+  G4int muonHitCollStripSize = muonHitCollectionStrip->entries();
 
   G4int maskHCID = G4SDManager::GetSDMpointer()->GetCollectionID("MaskingScintillatorCrystal_MuonHits");
   MuonHitCollection *muonHitcollectionMask = static_cast<MuonHitCollection *>(hce->GetHC(maskHCID));
 
-  G4int pocaHCID                       = G4SDManager::GetSDMpointer()->GetCollectionID("PoCAHitCollection");
+  G4int pocaHCID = G4SDManager::GetSDMpointer()->GetCollectionID("PoCAHitCollection");
   PoCAHitCollection *pocaHitcollection = static_cast<PoCAHitCollection *>(hce->GetHC(pocaHCID));
 
   // Printing PoCA Hit Collection
@@ -68,7 +66,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
       if (hitStrip->fPlaneNum == 0) {
         analMan->FillNtupleDColumn(1, 5, hitStrip->GetStripCenter());
         double stripCenter = hitStrip->GetStripCenter();
-        double randomHit   = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
+        double randomHit = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
         hitPointVec[hitStrip->fLayerNum].setX(stripCenter);
         exactHitPointVec[hitStrip->fLayerNum].setX(hitStrip->fExactHit.x());
         randomizeHitPointVec[hitStrip->fLayerNum].setX(randomHit);
@@ -76,7 +74,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
       } else {
         analMan->FillNtupleDColumn(1, 7, hitStrip->GetStripCenter());
         double stripCenter = hitStrip->GetStripCenter();
-        double randomHit   = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
+        double randomHit = fRng.Uniform(stripCenter - scintHalfx, stripCenter + scintHalfx);
         hitPointVec[hitStrip->fLayerNum].setZ(stripCenter);
         exactHitPointVec[hitStrip->fLayerNum].setZ(hitStrip->fExactHit.z());
         randomizeHitPointVec[hitStrip->fLayerNum].setZ(randomHit);
@@ -84,7 +82,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
       }
       momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
       analMan->FillNtupleDColumn(1, 8, event->GetEventID());
-      analMan->AddNtupleRow(1);
+      // analMan->AddNtupleRow(1);
     }
   }
 
@@ -127,7 +125,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
                                  event->GetEventID(
 
                                      ));
-      analMan->AddNtupleRow(2);
+      // analMan->AddNtupleRow(2);
     }
 
     // Hardcoded for incoming and outgoing track of size 2
@@ -155,24 +153,36 @@ void EventAction::EndOfEventAction(const G4Event *event)
 #ifdef ML_TREE
     // TODO : Logic to detect ground truth PoCA from PoCA Hit Collection
     G4ThreeVector groundTruthPoCA(-50000., -50000., -50000.);
+    G4ThreeVector calcPoCA(-50000., -50000., -50000.);
+    double angleDev = -50000;
     double maxAngle = 0.;
 
-    G4ThreeVector pIn  = fIncomingTrack.GetP1();
-    G4ThreeVector dIn  = fIncomingTrack.GetDirCosine();
-    G4ThreeVector pOut = fOutgoingTrack.GetP1();
-    G4ThreeVector dOut = fOutgoingTrack.GetDirCosine();
+    G4ThreeVector pIn = fIncomingTrackRandomize.GetP1();
+    G4ThreeVector dIn = fIncomingTrackRandomize.GetDirCosine();
+    G4ThreeVector pOut = fOutgoingTrackRandomize.GetP1();
+    G4ThreeVector dOut = fOutgoingTrackRandomize.GetDirCosine();
 
     if (pocaHitcollection) {
+      TRandom3 randGen(0); // 0 seeds with current time
+      int stop = pocaHitcollection->entries();
+      angleDev = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
+      /*if (stop > 0) {
+        int ranStepIndex = (int)randGen.Uniform(0, stop); // Include stop
+        // std::cout << "ranStepIndex : " << ranStepIndex << std::endl;
+        groundTruthPoCA =
+            POCA(fIncomingTrackExact, fOutgoingTrackExact); // (*pocaHitcollection)[ranStepIndex]->fStepPosition;
+      }*/
       for (unsigned int s = 0; s < pocaHitcollection->entries(); s++) {
         //(*pocaHitcollection)[i]->Print();
         G4ThreeVector stepDir = (*pocaHitcollection)[s]->fStepDirection;
 
         double angle = stepDir.angle(fIncomingTrack.GetDirCosine());
         if (angle > maxAngle) {
-          maxAngle        = angle;
+          maxAngle = angle;
           groundTruthPoCA = (*pocaHitcollection)[s]->fStepPosition;
         }
       }
+      calcPoCA = POCA(fIncomingTrackRandomize, fOutgoingTrackRandomize);
     }
     // std::cout << "Ground Truth PoCA : " << groundTruthPoCA << std::endl;
     analMan->FillNtupleDColumn(5, 0, pIn.x());
@@ -192,6 +202,12 @@ void EventAction::EndOfEventAction(const G4Event *event)
     analMan->FillNtupleDColumn(5, 12, groundTruthPoCA.x());
     analMan->FillNtupleDColumn(5, 13, groundTruthPoCA.y());
     analMan->FillNtupleDColumn(5, 14, groundTruthPoCA.z());
+
+    analMan->FillNtupleDColumn(5, 15, angleDev);
+    analMan->FillNtupleDColumn(5, 16, calcPoCA.x());
+    analMan->FillNtupleDColumn(5, 17, calcPoCA.y());
+    analMan->FillNtupleDColumn(5, 18, calcPoCA.z());
+
     analMan->AddNtupleRow(5);
 #endif
     //-----------------------------------------------------------------
@@ -211,10 +227,10 @@ void EventAction::EndOfEventAction(const G4Event *event)
      double g4CalcMomentum = momentumVec[0].mag();*/
 
     double g4CalcMomentum = momentumVec[0].mag();
-    double devTarget      = 0;
-    double devMomentum    = 0;
-    double pathLength     = 0;
-    double myMomentum     = 0;
+    double devTarget = 0;
+    double devMomentum = 0;
+    double pathLength = 0;
+    double myMomentum = 0;
     G4ThreeVector poca(-50000., -50000., -50000.);
 
     // if (fIncomingTrack.Angle(fOutgoingTrack) > 0.01)
@@ -222,12 +238,12 @@ void EventAction::EndOfEventAction(const G4Event *event)
 
       // if (!std::isnan(poca.x()) && !std::isnan(poca.y()) && !std::isnan(poca.z()))
       {
-        double dev         = fIncomingTrack.Angle(fOutgoingTrack);
+        double dev = fIncomingTrack.Angle(fOutgoingTrack);
         G4ThreeVector poca = POCA(fIncomingTrack, fOutgoingTrack);
-        double L_1         = (fOutgoingTrack.GetP2() - fMomentumTrack.GetP1()).mag() / 10.;
-        double L_2         = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
+        double L_1 = (fOutgoingTrack.GetP2() - fMomentumTrack.GetP1()).mag() / 10.;
+        double L_2 = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
         double devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
-        double momentum    = 92.7 / devMomentum;
+        double momentum = 92.7 / devMomentum;
 
         // Estimate momentum
         // double momentum_pl = EstimateMomentum(devMomentum, L_1)*1000.;
@@ -246,17 +262,17 @@ void EventAction::EndOfEventAction(const G4Event *event)
         analMan->FillNtupleDColumn(3, 10, momentum_pl);
         analMan->FillNtupleDColumn(3, 11, g4CalcMomentum);
         analMan->FillNtupleDColumn(3, 12, event->GetEventID());
-        analMan->AddNtupleRow(3);
+        // analMan->AddNtupleRow(3);
       }
 
 #ifdef ML_TREE
 
       {
-        devTarget       = fIncomingTrack.Angle(fOutgoingTrack);
-        devMomentum     = fOutgoingTrack.Angle(fMomentumTrack);
-        pathLength      = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
+        devTarget = fIncomingTrack.Angle(fOutgoingTrack);
+        devMomentum = fOutgoingTrack.Angle(fMomentumTrack);
+        pathLength = ComputePathLength(20, fOutgoingTrack.GetZenithAngle(), fMomentumTrack.GetZenithAngle());
         double momentum = 92.7 / devMomentum;
-        poca            = POCA(fIncomingTrack, fOutgoingTrack);
+        poca = POCA(fIncomingTrack, fOutgoingTrack);
 
         analMan->FillNtupleDColumn(4, 0, fIncomingTrack.GetP1().x());
         analMan->FillNtupleDColumn(4, 1, fIncomingTrack.GetP1().y());
@@ -286,12 +302,12 @@ void EventAction::EndOfEventAction(const G4Event *event)
       }
 
       {
-        devTarget   = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
+        devTarget = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
         devMomentum = fOutgoingTrackRandomize.Angle(fMomentumTrackRandomize);
         pathLength =
             ComputePathLength(20, fOutgoingTrackRandomize.GetZenithAngle(), fMomentumTrackRandomize.GetZenithAngle());
         double momentum = 92.7 / devMomentum;
-        poca            = POCA(fIncomingTrackRandomize, fOutgoingTrackRandomize);
+        poca = POCA(fIncomingTrackRandomize, fOutgoingTrackRandomize);
         analMan->FillNtupleDColumn(4, 25, fIncomingTrackRandomize.GetP1().x());
         analMan->FillNtupleDColumn(4, 26, fIncomingTrackRandomize.GetP1().y());
         analMan->FillNtupleDColumn(4, 27, fIncomingTrackRandomize.GetP1().z());
@@ -320,11 +336,11 @@ void EventAction::EndOfEventAction(const G4Event *event)
       }
 
       {
-        devTarget   = fIncomingTrackExact.Angle(fOutgoingTrackExact);
+        devTarget = fIncomingTrackExact.Angle(fOutgoingTrackExact);
         devMomentum = fOutgoingTrackExact.Angle(fMomentumTrackExact);
-        pathLength  = ComputePathLength(20, fOutgoingTrackExact.GetZenithAngle(), fMomentumTrackExact.GetZenithAngle());
+        pathLength = ComputePathLength(20, fOutgoingTrackExact.GetZenithAngle(), fMomentumTrackExact.GetZenithAngle());
         double momentum = 92.7 / devMomentum;
-        poca            = POCA(fIncomingTrackExact, fOutgoingTrackExact);
+        poca = POCA(fIncomingTrackExact, fOutgoingTrackExact);
         analMan->FillNtupleDColumn(4, 50, fIncomingTrackExact.GetP1().x());
         analMan->FillNtupleDColumn(4, 51, fIncomingTrackExact.GetP1().y());
         analMan->FillNtupleDColumn(4, 52, fIncomingTrackExact.GetP1().z());
@@ -353,7 +369,7 @@ void EventAction::EndOfEventAction(const G4Event *event)
       }
       analMan->FillNtupleDColumn(4, 75, g4CalcMomentum);
       analMan->FillNtupleDColumn(4, 76, event->GetEventID());
-      analMan->AddNtupleRow(4);
+      // analMan->AddNtupleRow(4);
 #endif
     }
   }
