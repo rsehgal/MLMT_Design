@@ -10,6 +10,7 @@
 #include "G4Event.hh"
 #include "Track.h"
 #include "TRandom3.h"
+#include "HitCollections.h"
 
 class EventAction : public G4UserEventAction {
   Track fIncomingTrack;
@@ -28,6 +29,7 @@ public:
   ~EventAction();
   void BeginOfEventAction(const G4Event *event);
   void EndOfEventAction(const G4Event *event);
+  G4ThreeVector GetGroundTruthPoCA(PoCAHitCollection *pocaHitcollection);
 };
 
 #endif

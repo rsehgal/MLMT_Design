@@ -47,40 +47,76 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
     new G4PVPlacement(0, G4ThreeVector(0, yPosVec[i], 0), logicalTomoLayer, "PhysicalTomoLayer", fLogicalVolume, false,
                       i, checkOverlaps);
   }
-
+//#define TRAINING_DATA
+#ifdef TRAINING_DATA
   // Scatterer under test
-  //  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 50 * cm, 10 * cm, 50 * cm,
-  //  "G4_Fe"))->GetLogicalVolume();
-  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
-
-  /*  G4Orb *orb = new G4Orb("ORB", 10 * cm);
-    G4LogicalVolume *logicalScatterer = new G4LogicalVolume(orb, pb, "LogicalOrb");
-*/
-  /* new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 50 * cm, 10. * cm, 50 * cm,
+    "G4_Pb"))->GetLogicalVolume();
+ new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
                      checkOverlaps);
- */
-  new G4PVPlacement(0, G4ThreeVector(0, 0., 20. * cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(20 * cm, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 1,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(-20 * cm, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 2,
-                    checkOverlaps);
-  new G4PVPlacement(0, G4ThreeVector(0., 0., -20. * cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false,
-                    3, checkOverlaps);
+#endif
 
-  G4RotationMatrix *rotation = new G4RotationMatrix();
+#define TESTING_DATA
+#ifdef TESTING_DATA
+
+  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScattererPb = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
+/*
+  G4LogicalVolume *logicalScattererAl = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Al"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScattererU = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_U"))->GetLogicalVolume();
+
+  G4LogicalVolume *logicalScattererFeEnv = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScattererHiddenU = (new Box("Scatterer", 8 * cm, 8 * cm, 8 * cm, "G4_U"))->GetLogicalVolume();
+new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalScattererHiddenU, "PhysicalScattererHiddenU",logicalScattererFeEnv , false, 0, checkOverlaps);
+*/
+
+/*    G4Orb *orb = new G4Orb("ORB", 15 * cm);
+    G4LogicalVolume *logicalScatterer = new G4LogicalVolume(orb, pb, "LogicalOrb");
+
+G4LogicalVolume *logicalTube =
+      (new CylindricalShell("TubeScatterer", 3 * cm, 6 * cm, 10 * cm, 0., 2 * M_PI, "G4_Fe"))->GetLogicalVolume();
+
+  new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+                     checkOverlaps);
+   new G4PVPlacement(0, G4ThreeVector(30*cm, 0., 30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume, false, 0,
+                    checkOverlaps);
+    new G4PVPlacement(0, G4ThreeVector(-30.*cm, 0., -30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume, false, 0,
+                     checkOverlaps);
+   G4RotationMatrix *rotation = new G4RotationMatrix();
   rotation->rotateX(90.0 * deg);
+   new G4PVPlacement(rotation, G4ThreeVector(30*cm, 0., -30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume, false, 0,
+                    checkOverlaps);
+    new G4PVPlacement(rotation, G4ThreeVector(-30.*cm, 0., 30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume, false, 0,
+                     checkOverlaps);*/
 
-  G4LogicalVolume *logicalTube =
+
+new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
+                    checkOverlaps);
+
+  new G4PVPlacement(0, G4ThreeVector(20*cm, 0., 20. * cm), logicalScattererPb, "PhysicalScatterer", fLogicalVolume, false, 1,
+                    checkOverlaps);
+  new G4PVPlacement(0, G4ThreeVector(20 * cm, 0., -20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 2,
+                    checkOverlaps);
+  new G4PVPlacement(0, G4ThreeVector(-20 * cm, 0., 20.*cm), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 3,
+                    checkOverlaps);
+  new G4PVPlacement(0, G4ThreeVector(-20*cm, 0., -20. * cm), logicalScattererPb, "PhysicalScatterer", fLogicalVolume, false,
+                    4, checkOverlaps);
+
+
+
+#endif
+
+/*  G4LogicalVolume *logicalTube =
       (new CylindricalShell("TubeScatterer", 3 * cm, 6 * cm, 10 * cm, 0., 2 * M_PI, "G4_Pb"))->GetLogicalVolume();
   new G4PVPlacement(rotation, G4ThreeVector(0, 0., 0), logicalTube, "PhysicalTubeScatterer", fLogicalVolume, false, 0,
                     checkOverlaps);
-
+*/
   G4SDManager *fSDMan = G4SDManager::GetSDMpointer();
   PoCA_SD *pocaSD = new PoCA_SD("PoCA_Sensitive_Detector", "PoCAHitCollection");
   fSDMan->AddNewDetector(pocaSD);
   logicalScatterer->SetSensitiveDetector(pocaSD);
-  logicalTube->SetSensitiveDetector(pocaSD);
+  logicalScattererPb->SetSensitiveDetector(pocaSD);
+  //logicalTube->SetSensitiveDetector(pocaSD);
 
   // For momentum estimation
   G4LogicalVolume *logicalMomentumScatterer =
