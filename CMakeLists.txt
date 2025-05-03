@@ -47,6 +47,16 @@ if(USE_EVE)
 add_definitions(-DUSE_EVE)
 endif(USE_EVE)
 
+option(TRAINING_DATA "Generated Training data" OFF)
+if(TRAINING_DATA)
+add_definitions(-DTRAINING_DATA)
+endif(TRAINING_DATA)
+
+option(TESTING_DATA "Generate Testing data" OFF)
+if(TESTING_DATA)
+add_definitions(-DTESTING_DATA)
+endif(TESTING_DATA)
+
 option(RANDOM_DIRECTION "Random direction in case CRY is not used " ON)
 if(RANDOM_DIRECTION)
 add_definitions(-DRANDOM_DIRECTION)

@@ -44,8 +44,8 @@ void tree(char *filename)
   TH2F *hist_std_th = new TH2F("hist_std_th", "hist_std_th", nbins, xstart, xend, nbins, xstart, xend);
   TH2F *histXY_final_stddev = new TH2F("histXY_Final_StdDev", "histXY_Final_StdDev", nbins, xstart, xend, nbins, xstart, xend);
   TH2F *histXY_std_th = new TH2F("histXY_std_th", "histXY_std_th", nbins, xstart, xend, nbins, xstart, xend);
-   TH2F *histXY_final_mean = new TH2F("histXY_Final_StdDev", "histXY_Final_StdDev", nbins, xstart, xend, nbins, xstart, xend);
-  TH2F *histXY_mean_th = new TH2F("histXY_std_th", "histXY_std_th", nbins, xstart, xend, nbins, xstart, xend);
+  TH2F *histXY_final_mean = new TH2F("histXY_Final_Mean", "histXY_Final_Mean", nbins, xstart, xend, nbins, xstart, xend);
+  TH2F *histXY_mean_th = new TH2F("histXY_mean_th", "histXY_mean_th", nbins, xstart, xend, nbins, xstart, xend);
  
   Long64_t nbytes      = 0;
   for (Long64_t i = 0; i < nentries; i++) {
@@ -104,10 +104,12 @@ void tree(char *filename)
 	hist_final_mean_th->SetBinContent(i,j,mean);
 
 	hist_final_stddev->SetBinContent(i,j,stddev);
-	if(stddev > 0.02){
+	if(stddev > 0.02)
 	hist_std_th->SetBinContent(i,j,stddev);
+	
 	}
 	//hist_final2->SetBinContent(i,j,stddev);
+	if(n>1)
 	{
         double sumAngle   = hist_angleDevY->GetBinContent(i, j);
         double sumAngle2  = hist_angleDev2Y->GetBinContent(i, j);
@@ -118,16 +120,15 @@ void tree(char *filename)
 	histXY_final_stddev->SetBinContent(i,j,stddev);//*stddev);
 	if(stddev > 0.02)
 	histXY_std_th->SetBinContent(i,j,stddev);//*stddev);
-	}
 
        histXY_final_mean->SetBinContent(i,j,mean);//*stddev);
-	if(stddev > 0.02)
+	if(mean > 0.02)
 	histXY_mean_th->SetBinContent(i,j,mean);//*stddev);
-	}
 
       }
     }
-  }
+   }
+  
 can->cd(4);
 hist_final_stddev->Draw("colz");
 can->cd(5);
@@ -147,6 +148,11 @@ can->cd(9);
 histXY_final_stddev->Draw("colz");
 can->cd(10);
 histXY_std_th->Draw("colz");
+can->cd(11);
+histXY_final_mean->Draw("colz");
+can->cd(12);
+histXY_mean_th->Draw("colz");
+
 
 /*  TCanvas *canO = new TCanvas("Output","Output");
   canO->Divide(2,2);

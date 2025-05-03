@@ -69,16 +69,18 @@ print("==== Model Ready  ====")
 y_pred = model.predict(X_test)
 print("==== Prediction Done ====")
 # Evaluation
-mse = mean_squared_error(y_test, y_pred, multioutput='raw_values')
-r2 = r2_score(y_test, y_pred, multioutput='raw_values')
 
-print("\nEvaluation per output coordinate:")
-for i, key in enumerate(output_keys):
-    print(f"{key}: MSE = {mse[i]:.4f}, R² = {r2[i]:.4f}")
+#mse = mean_squared_error(y_test, y_pred, multioutput='raw_values')
+#r2 = r2_score(y_test, y_pred, multioutput='raw_values')
 
-print("==== Evaluation Done =====")
+#print("\nEvaluation per output coordinate:")
+#for i, key in enumerate(output_keys):
+#    print(f"{key}: MSE = {mse[i]:.4f}, R² = {r2[i]:.4f}")
+
+#print("==== Evaluation Done =====")
 
 angleDev = X_test[:,12]
+#angleDev_clean=angleDev[mask]
 
 final_output = np.column_stack((y_pred,angleDev))
 np.savetxt("output.csv", final_output, delimiter=" ")
