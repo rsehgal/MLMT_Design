@@ -63,7 +63,7 @@ void tree(char *filename)
   }
 
 
-  TCanvas *can = new TCanvas;
+  TCanvas *can = new TCanvas(filename,filename);
   can->Divide(4,3);
 
   //Smoothing all the histograms

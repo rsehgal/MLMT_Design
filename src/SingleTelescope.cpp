@@ -49,7 +49,12 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   }
 #ifdef TRAINING_DATA
   // Scatterer under test
+#ifdef BACKGROUND_DATA
+  G4LogicalVolume *logicalScatterer =
+      (new Box("Scatterer", 50 * cm, 0.005 * cm, 50 * cm, "G4_Galactic"))->GetLogicalVolume();
+#else
   G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 50 * cm, 10. * cm, 50 * cm, "G4_Pb"))->GetLogicalVolume();
+#endif
   new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
                     checkOverlaps);
 
@@ -58,7 +63,7 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   fSDMan->AddNewDetector(pocaSD);
   logicalScatterer->SetSensitiveDetector(pocaSD);
 
-#endif
+#else
 
 #ifdef TESTING_DATA
 
@@ -117,7 +122,7 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   // logicalTube->SetSensitiveDetector(pocaSD);
 
 #endif
-
+#endif
   // For momentum estimation
   G4LogicalVolume *logicalMomentumScatterer =
       (new Box("MomentumDetectionScattererSlab", 50 * cm, 10 * cm, 50 * cm, "G4_Pb"))->GetLogicalVolume();

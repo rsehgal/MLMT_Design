@@ -52,6 +52,12 @@ if(TRAINING_DATA)
 add_definitions(-DTRAINING_DATA)
 endif(TRAINING_DATA)
 
+option(BACKGROUND_DATA "Generated Background data" OFF)
+if(BACKGROUND_DATA)
+add_definitions(-DBACKGROUND_DATA)
+endif(BACKGROUND_DATA)
+
+
 option(TESTING_DATA "Generate Testing data" OFF)
 if(TESTING_DATA)
 add_definitions(-DTESTING_DATA)
