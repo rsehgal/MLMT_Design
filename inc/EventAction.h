@@ -30,6 +30,7 @@ public:
   void BeginOfEventAction(const G4Event *event);
   void EndOfEventAction(const G4Event *event);
   G4ThreeVector GetGroundTruthPoCA(PoCAHitCollection *pocaHitcollection);
+  G4ThreeVector GetGroundTruthPoCA_V2(PoCAHitCollection *pocaHitcollection);
 };
 
 #endif

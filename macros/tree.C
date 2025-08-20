@@ -24,6 +24,7 @@ void tree(char *filename)
   // tree->SetBranchStatus("*",0);  // disable all branches
   // TTreePlayer->SetBranchStatus("branchname",1);  // activate branchname
 
+  double threshold = 0.012;
   Long64_t nentries    = tree->GetEntries();
   int nbins            = 100;
   int xstart           = -500;
@@ -100,11 +101,11 @@ void tree(char *filename)
 	//std::cout << "SD : " << stddev << std::endl;
 	//hist_final->SetBinContent(i,j,stddev);
 	hist_final_mean->SetBinContent(i,j,mean);
-	if(stddev > 0.02)
+	if(stddev > threshold)
 	hist_final_mean_th->SetBinContent(i,j,mean);
 
 	hist_final_stddev->SetBinContent(i,j,stddev);
-	if(stddev > 0.02)
+	if(stddev > threshold)
 	hist_std_th->SetBinContent(i,j,stddev);
 	
 	}
@@ -117,12 +118,12 @@ void tree(char *filename)
         double mean       = sumAngle / n;
         double stddev     = std::sqrt(meanSquare - mean * mean);
 	//std::cout << "SD : " << stddev << std::endl;
-	histXY_final_stddev->SetBinContent(i,j,stddev);//*stddev);
-	if(stddev > 0.02)
-	histXY_std_th->SetBinContent(i,j,stddev);//*stddev);
+	histXY_final_stddev->SetBinContent(i,j,1./stddev);//*stddev);
+	if(1./stddev > threshold)
+	histXY_std_th->SetBinContent(i,j,1./stddev);//*stddev);
 
        histXY_final_mean->SetBinContent(i,j,mean);//*stddev);
-	if(mean > 0.02)
+	if(mean > threshold)
 	histXY_mean_th->SetBinContent(i,j,mean);//*stddev);
 
       }

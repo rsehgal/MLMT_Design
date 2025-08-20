@@ -18,6 +18,7 @@
 #include "colors.h"
 #include <cmath>
 #include <iostream>
+#include <G4RandomTools.hh>
 EventAction::EventAction() {}
 
 EventAction::~EventAction() {}
@@ -53,6 +54,43 @@ G4ThreeVector EventAction::GetGroundTruthPoCA(PoCAHitCollection *pocaHitcollecti
   return groundTruthPoCA;
 }
 
+G4ThreeVector EventAction::GetGroundTruthPoCA_V2(PoCAHitCollection *pocaHitcollection) {
+  G4ThreeVector groundTruthPoCA(-50000, -50000, -50000.);
+bool firstHit = true;
+      if (pocaHitcollection->entries() > 1) {
+        // angleDev = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
+        G4ThreeVector stepDir = (*pocaHitcollection)[0]->fStepDirection;
+        G4ThreeVector nextStepDir(0., 0., 0.);
+        double thetaSqSum = 0.;
+        double thetaSq = 0;
+    double ystart = ((*pocaHitcollection)[0]->fStepPosition).y();
+    double yend = ((*pocaHitcollection)[pocaHitcollection->entries()-1]->fStepPosition).y();
+    double randY = ystart + (yend - ystart) * G4UniformRand();
+    
+
+        for (unsigned int s = 1; s < pocaHitcollection->entries(); s++) {
+          thetaSq = 0.;
+          //(*pocaHitcollection)[i]->Print();
+          nextStepDir = (*pocaHitcollection)[s]->fStepDirection;
+          double theta = nextStepDir.angle(stepDir);
+          thetaSq = theta * theta;
+          thetaSqSum += thetaSq;
+          if (firstHit) {
+            groundTruthPoCA = thetaSq * (*pocaHitcollection)[s]->fStepPosition;
+            firstHit = false;
+          } else
+            groundTruthPoCA += thetaSq * (*pocaHitcollection)[s]->fStepPosition;
+          stepDir = nextStepDir;
+        }
+        /* if(groundTruthPoCA.y() > -45000.)
+                std::cout << groundTruthPoCA << std::endl;
+        */
+        groundTruthPoCA /= thetaSqSum;
+    groundTruthPoCA.setY(randY);
+//std::cout << groundTruthPoCA << std::endl;
+      }
+  return groundTruthPoCA;
+}
 //-------
 
 void EventAction::EndOfEventAction(const G4Event *event) {
@@ -108,7 +146,7 @@ void EventAction::EndOfEventAction(const G4Event *event) {
       }
       momentumVec[hitStrip->fLayerNum] = hitStrip->fMomentum;
       analMan->FillNtupleDColumn(1, 8, event->GetEventID());
-      // analMan->AddNtupleRow(1);
+      analMan->AddNtupleRow(1);
     }
   }
 
@@ -203,7 +241,13 @@ void EventAction::EndOfEventAction(const G4Event *event) {
 
         groundTruthPoCA = GetGroundTruthPoCA(pocaHitcollection);*/
       // std::cout << "Size of PocaHitCollection : " << pocaHitcollection->entries() << std::endl;
-      bool firstHit = true;
+
+
+
+      /*bool firstHit = true;
+
+      //Logic taken to GroundTruthPoCA_V2
+
       if (pocaHitcollection->entries() > 1) {
         // angleDev = fIncomingTrackRandomize.Angle(fOutgoingTrackRandomize);
         G4ThreeVector stepDir = (*pocaHitcollection)[0]->fStepDirection;
@@ -224,12 +268,11 @@ void EventAction::EndOfEventAction(const G4Event *event) {
             groundTruthPoCA += thetaSq * (*pocaHitcollection)[s]->fStepPosition;
           stepDir = nextStepDir;
         }
-        /* if(groundTruthPoCA.y() > -45000.)
-                std::cout << groundTruthPoCA << std::endl;
-        */
         groundTruthPoCA /= thetaSqSum;
       }
+*/
 
+        groundTruthPoCA = GetGroundTruthPoCA_V2(pocaHitcollection);
       /*for (unsigned int s = 0; s < pocaHitcollection->entries(); s++) {
         //(*pocaHitcollection)[i]->Print();
         G4ThreeVector stepDir = (*pocaHitcollection)[s]->fStepDirection;

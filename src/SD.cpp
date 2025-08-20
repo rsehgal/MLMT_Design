@@ -78,7 +78,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
         // return true;
         // unsigned int
         channelNum = layerNum * 4 * n + subLayerNum * 2 * n + n + stripNum;
-        /*std::cout << RED << "Particle Name : " << particleName
+/*        std::cout << RED << "Particle Name : " << particleName
        << " : Layer Number : " << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
        << " : SubLayer Number : " << subLayerNum
 
@@ -103,7 +103,7 @@ G4bool SD::ProcessHits(G4Step *step, G4TouchableHistory *history)
 	//std::cout << track->GetPosition() << std::endl;
 
 
-        /*std::cout << "Particle Name : " << particleName << " : Layer Number : "
+  /*      std::cout << "Particle Name : " << particleName << " : Layer Number : "
                   << layerNum // track->GetTouchable()->GetVolume(2)->GetCopyNo()
                   //<< " : Bunch Num : " << maskNum     // track->GetTouchable()->GetVolume(1)->GetCopyNo()
                   << " :: strip no :" << stripNum << " :: Name : " << track->GetTouchable()->GetVolume()->GetName()

@@ -67,21 +67,20 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
 
 #ifdef TESTING_DATA
 
-  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
-  G4LogicalVolume *logicalScattererPb = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
-  /*
-    G4LogicalVolume *logicalScattererAl = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
-  "G4_Al"))->GetLogicalVolume(); G4LogicalVolume *logicalScattererU = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
-  "G4_U"))->GetLogicalVolume();
-
-    G4LogicalVolume *logicalScattererFeEnv = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
-  "G4_Fe"))->GetLogicalVolume(); G4LogicalVolume *logicalScattererHiddenU = (new Box("Scatterer", 8 * cm, 8 * cm, 8 *
-  cm, "G4_U"))->GetLogicalVolume(); new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalScattererHiddenU,
-  "PhysicalScattererHiddenU",logicalScattererFeEnv , false, 0, checkOverlaps);
-  */
-
-  /*    G4Orb *orb = new G4Orb("ORB", 15 * cm);
+/*  G4LogicalVolume *logicalOuterBox = (new Box("OuterBox", 25 * cm, 25 * cm, 25 * cm, "G4_Fe"))->GetLogicalVolume();
+      G4Orb *orb = new G4Orb("ORB", 15 * cm);
       G4LogicalVolume *logicalScatterer = new G4LogicalVolume(orb, pb, "LogicalOrb");
+     new G4PVPlacement(0, G4ThreeVector(0*cm, 0., 0.*cm), logicalScatterer, "PhysicalScatterer",logicalOuterBox , false, 0,
+                      checkOverlaps);
+    new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), logicalOuterBox, "PhysicalOuterBox", fLogicalVolume, false, 0,
+                       checkOverlaps);
+*/
+
+/*
+//Orb with tube setup
+      G4Orb *orb = new G4Orb("ORB", 15 * cm);
+      G4LogicalVolume *logicalScatterer = new G4LogicalVolume(orb, pb, "LogicalOrb");
+
 
   G4LogicalVolume *logicalTube =
         (new CylindricalShell("TubeScatterer", 3 * cm, 6 * cm, 10 * cm, 0., 2 * M_PI, "G4_Fe"))->GetLogicalVolume();
@@ -95,7 +94,23 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   G4PVPlacement(rotation, G4ThreeVector(30*cm, 0., -30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume, false, 0,
                       checkOverlaps);
       new G4PVPlacement(rotation, G4ThreeVector(-30.*cm, 0., 30.*cm), logicalTube, "PhysicalScatterer", fLogicalVolume,
-  false, 0, checkOverlaps);*/
+  false, 0, checkOverlaps);
+*/
+
+
+
+/*    G4LogicalVolume *logicalScattererAl = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
+  "G4_Al"))->GetLogicalVolume(); G4LogicalVolume *logicalScattererU = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
+  "G4_U"))->GetLogicalVolume();
+
+    G4LogicalVolume *logicalScattererFeEnv = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm,
+  "G4_Fe"))->GetLogicalVolume(); G4LogicalVolume *logicalScattererHiddenU = (new Box("Scatterer", 8 * cm, 8 * cm, 8 *
+  cm, "G4_U"))->GetLogicalVolume(); new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalScattererHiddenU,
+  "PhysicalScattererHiddenU",logicalScattererFeEnv , false, 0, checkOverlaps);
+ */ 
+  G4LogicalVolume *logicalScatterer = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Fe"))->GetLogicalVolume();
+  G4LogicalVolume *logicalScattererPb = (new Box("Scatterer", 10 * cm, 10 * cm, 10 * cm, "G4_Pb"))->GetLogicalVolume();
+ 
 
   new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicalScatterer, "PhysicalScatterer", fLogicalVolume, false, 0,
                     checkOverlaps);
@@ -119,7 +134,8 @@ SingleTelescope::SingleTelescope(G4String name, unsigned int numOfScintillators,
   fSDMan->AddNewDetector(pocaSD);
   logicalScatterer->SetSensitiveDetector(pocaSD);
   logicalScattererPb->SetSensitiveDetector(pocaSD);
-  // logicalTube->SetSensitiveDetector(pocaSD);
+   //logicalTube->SetSensitiveDetector(pocaSD);
+   //logicalOuterBox->SetSensitiveDetector(pocaSD);
 
 #endif
 #endif
